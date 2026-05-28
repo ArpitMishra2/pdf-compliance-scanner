@@ -4,7 +4,7 @@ streamlit-authenticator==0.3.1
 
 # LangGraph Orchestration
 langgraph==0.2.14
-langchain-core>=0.2.27
+langchain-core==0.2.43
 langchain-groq==0.1.6
 
 # AI Clients
@@ -12,7 +12,7 @@ groq==0.9.0
 anthropic        # Optional: only if you later get Claude API
 
 # PDF Processing
-PyMuPDF==1.24.5          # fitz — fast, accurate PDF parser
+PyMuPDF==1.24.9           # fitz — fast, accurate PDF parser
 reportlab==4.2.0          # PDF report generation
 
 # Encoding & Language Detection
