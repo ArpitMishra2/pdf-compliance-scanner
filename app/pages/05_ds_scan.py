@@ -19,14 +19,10 @@ init_ds_db()
 
 # ── PAGE HEADER ────────────────────────────────────────────────────────────────
 st.markdown(textwrap.dedent("""
-<div class="animate-fadein" style="padding:0 0 24px">
-  <div class="caption-label">MODULE 05</div>
-  <h1 style="font-family:'Space Mono',monospace;font-size:33px;font-weight:700;color:var(--text);margin:6px 0 4px">
-    DATA SOURCE <span style="color:var(--amber)">SCAN</span>
-  </h1>
-  <p style="color:var(--text-muted);font-size:17px;margin:0">
-    Run compliance scans on registered data sources — schema discovery + PII/confidential classification.
-  </p>
+<div class="page-header">
+  <span class="module-label">Module 05</span>
+  <h1>Data Source Scan</h1>
+  <p>Run compliance scans on registered data sources — schema discovery + PII/confidential classification.</p>
 </div>
 """), unsafe_allow_html=True)
 
@@ -34,11 +30,9 @@ sources = DataSourceDB.get_all_sources()
 
 if not sources:
     st.markdown(textwrap.dedent("""
-    <div style="text-align:center;padding:64px 24px;border:1px dashed var(--border);border-radius:4px">
-      <div style="font-family:'Space Mono',monospace;font-size:16px;color:var(--text-muted);letter-spacing:0.1em">
-        NO DATA SOURCES REGISTERED<br>
-        <span style="font-size:14px;color:var(--border-bright)">Add a source in Module 04 first.</span>
-      </div>
+    <div style="text-align:center;padding:64px 24px;border:1px dashed var(--border);border-radius:var(--radius-xl)">
+      <div style="font-size:15px;font-weight:600;color:var(--text-secondary);margin-bottom:6px">No data sources registered</div>
+      <div style="font-size:14px;color:var(--text-muted)">Add a source in Module 04 first.</div>
     </div>
     """), unsafe_allow_html=True)
     st.stop()
@@ -67,37 +61,37 @@ recent_scans = DataSourceDB.get_scan_runs(source_id, limit=5)
 col_stat1, col_stat2, col_stat3, col_stat4 = st.columns(4)
 with col_stat1:
     st.markdown(textwrap.dedent(f"""
-    <div style="background:var(--surface);border:1px solid var(--border);padding:16px;border-radius:3px">
-      <div class="caption-label" style="margin-bottom:4px">SOURCE STATUS</div>
-      <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:{status_color}">
-        {selected_source.get('status', 'active').upper()}
+    <div style="background:var(--surface);border:1px solid var(--border);padding:18px;border-radius:var(--radius-lg)">
+      <div class="caption-label" style="margin-bottom:6px">Source status</div>
+      <div style="font-size:16px;font-weight:700;color:{status_color}">
+        {selected_source.get('status', 'active').capitalize()}
       </div>
     </div>
     """), unsafe_allow_html=True)
 with col_stat2:
     snap_tables = snapshot.get("table_count", 0) if snapshot else "—"
     st.markdown(textwrap.dedent(f"""
-    <div style="background:var(--surface);border:1px solid var(--border);padding:16px;border-radius:3px">
-      <div class="caption-label" style="margin-bottom:4px">TABLES IN SNAPSHOT</div>
-      <div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:var(--amber)">{snap_tables}</div>
+    <div style="background:var(--surface);border:1px solid var(--border);padding:18px;border-radius:var(--radius-lg)">
+      <div class="caption-label" style="margin-bottom:6px">Tables in snapshot</div>
+      <div style="font-family:var(--font-mono);font-size:26px;font-weight:600;color:var(--text)">{snap_tables}</div>
     </div>
     """), unsafe_allow_html=True)
 with col_stat3:
     snap_cols = snapshot.get("column_count", 0) if snapshot else "—"
     st.markdown(textwrap.dedent(f"""
-    <div style="background:var(--surface);border:1px solid var(--border);padding:16px;border-radius:3px">
-      <div class="caption-label" style="margin-bottom:4px">COLUMNS IN SNAPSHOT</div>
-      <div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:var(--ice)">{snap_cols}</div>
+    <div style="background:var(--surface);border:1px solid var(--border);padding:18px;border-radius:var(--radius-lg)">
+      <div class="caption-label" style="margin-bottom:6px">Columns in snapshot</div>
+      <div style="font-family:var(--font-mono);font-size:26px;font-weight:600;color:var(--info)">{snap_cols}</div>
     </div>
     """), unsafe_allow_html=True)
 with col_stat4:
     snap_hash = (snapshot.get("schema_hash") or "—")[:12] if snapshot else "—"
     snap_time = (snapshot.get("captured_at") or "Never")[:16] if snapshot else "Never"
     st.markdown(textwrap.dedent(f"""
-    <div style="background:var(--surface);border:1px solid var(--border);padding:16px;border-radius:3px">
-      <div class="caption-label" style="margin-bottom:4px">LAST SNAPSHOT</div>
-      <div style="font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text-muted)">{snap_time}</div>
-      <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--border-bright);margin-top:2px">{snap_hash}</div>
+    <div style="background:var(--surface);border:1px solid var(--border);padding:18px;border-radius:var(--radius-lg)">
+      <div class="caption-label" style="margin-bottom:6px">Last snapshot</div>
+      <div style="font-family:var(--font-mono);font-size:13px;color:var(--text-secondary)">{snap_time}</div>
+      <div style="font-family:var(--font-mono);font-size:12px;color:var(--text-muted);margin-top:3px">{snap_hash}</div>
     </div>
     """), unsafe_allow_html=True)
 
@@ -106,11 +100,11 @@ st.markdown('<div style="height:16px"></div>', unsafe_allow_html=True)
 # ── SCAN TRIGGER ───────────────────────────────────────────────────────────────
 col_btn, col_help = st.columns([1, 3])
 with col_btn:
-    run_scan = st.button("▶  RUN COMPLIANCE SCAN", type="primary", use_container_width=True, key="run_ds_scan")
+    run_scan = st.button("Run Compliance Scan", type="primary", use_container_width=True, key="run_ds_scan")
 with col_help:
     st.markdown(textwrap.dedent("""
-    <div style="font-family:'Space Mono',monospace;font-size:13px;color:var(--text-muted);padding-top:8px;letter-spacing:0.05em">
-      Metadata → Schema Diff → Column Classification → Risk Score
+    <div style="font-size:13px;color:var(--text-muted);padding-top:8px">
+      Metadata → Schema diff → Column classification → Risk score
     </div>
     """), unsafe_allow_html=True)
 
@@ -128,8 +122,9 @@ if run_scan:
         # Stage 1: Metadata agent
         progress.progress(15, text="Connecting to data source…")
         status_ph.markdown(textwrap.dedent("""
-        <div style="font-family:'Space Mono',monospace;font-size:14px;color:var(--amber);padding:8px 0;letter-spacing:0.08em">
-          ◈ METADATA AGENT — collecting schema…
+        <div style="font-size:14px;color:var(--text-secondary);padding:8px 0;display:flex;align-items:center;gap:8px">
+          <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--indigo);animation:pulseDot 1.2s ease-in-out infinite"></span>
+          Metadata agent — collecting schema…
         </div>
         """), unsafe_allow_html=True)
 
@@ -142,8 +137,9 @@ if run_scan:
 
         progress.progress(45, text="Schema collected — running compliance agent…")
         status_ph.markdown(textwrap.dedent(f"""
-        <div style="font-family:'Space Mono',monospace;font-size:14px;color:var(--amber);padding:8px 0;letter-spacing:0.08em">
-          ⬡ COMPLIANCE AGENT — classifying {meta_state.get('current_metadata', {}).get('column_count', 0)} columns…
+        <div style="font-size:14px;color:var(--text-secondary);padding:8px 0;display:flex;align-items:center;gap:8px">
+          <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--indigo);animation:pulseDot 1.2s ease-in-out infinite"></span>
+          Compliance agent — classifying {meta_state.get('current_metadata', {}).get('column_count', 0)} columns…
         </div>
         """), unsafe_allow_html=True)
 
@@ -156,8 +152,9 @@ if run_scan:
 
         progress.progress(80, text="Indexing findings…")
         status_ph.markdown(textwrap.dedent("""
-        <div style="font-family:'Space Mono',monospace;font-size:14px;color:var(--amber);padding:8px 0;letter-spacing:0.08em">
-          ⟁ KNOWLEDGE AGENT — indexing into RAG store…
+        <div style="font-size:14px;color:var(--text-secondary);padding:8px 0;display:flex;align-items:center;gap:8px">
+          <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--indigo);animation:pulseDot 1.2s ease-in-out infinite"></span>
+          Knowledge agent — indexing into RAG store…
         </div>
         """), unsafe_allow_html=True)
 
@@ -224,11 +221,11 @@ if "ds_scan_result" in st.session_state:
     r_color = risk_colors.get(highest, "var(--text)")
 
     st.markdown(textwrap.dedent(f"""
-    <div style="border:1px solid {r_color};border-radius:4px;padding:20px 24px;margin:16px 0;background:rgba(0,0,0,0.2)">
-      <div class="caption-label" style="margin-bottom:4px">SCAN COMPLETE</div>
-      <div style="display:flex;align-items:center;gap:16px">
-        <span style="font-family:'Space Mono',monospace;font-size:24px;font-weight:700;color:var(--text)">{scanned_name}</span>
-        <span class="badge badge-{'critical' if highest == 'critical' else 'high' if highest == 'high' else 'medium' if highest == 'medium' else 'low'}">{highest.upper()}</span>
+    <div style="border:1px solid {r_color};border-radius:var(--radius-xl);padding:20px 24px;margin:16px 0;background:rgba(0,0,0,0.2)">
+      <div class="caption-label" style="margin-bottom:6px">Scan complete</div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span style="font-size:18px;font-weight:700;color:var(--text)">{scanned_name}</span>
+        <span class="badge badge-{'critical' if highest == 'critical' else 'high' if highest == 'high' else 'medium' if highest == 'medium' else 'low'}">{highest.capitalize()}</span>
       </div>
     </div>
     """), unsafe_allow_html=True)
@@ -245,25 +242,25 @@ if "ds_scan_result" in st.session_state:
     for col, label, value, color in metrics:
         with col:
             st.markdown(textwrap.dedent(f"""
-            <div style="background:var(--surface);border:1px solid var(--border);padding:14px;border-radius:3px;text-align:center">
-              <div class="caption-label" style="margin-bottom:4px">{label}</div>
-              <div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:{color}">{value}</div>
+            <div style="background:var(--surface);border:1px solid var(--border);padding:16px;border-radius:var(--radius-lg);text-align:center">
+              <div class="caption-label" style="margin-bottom:6px">{label}</div>
+              <div style="font-family:var(--font-mono);font-size:26px;font-weight:600;color:{color}">{value}</div>
             </div>
             """), unsafe_allow_html=True)
 
     # Schema changes
     changes = meta.get("changes", [])
     if changes:
-        st.markdown('<div class="caption-label" style="margin:20px 0 8px">SCHEMA CHANGES DETECTED</div>', unsafe_allow_html=True)
+        st.markdown('<div class="caption-label" style="margin:20px 0 8px">Schema changes detected</div>', unsafe_allow_html=True)
         sev_badge = {"critical": "badge-critical", "high": "badge-high", "medium": "badge-medium", "low": "badge-low"}
         for chg in changes[:20]:
             sev = chg.get("severity", "medium")
             st.markdown(textwrap.dedent(f"""
-            <div style="background:var(--surface);border-left:3px solid var(--{'red' if sev == 'critical' else 'high' if sev == 'high' else 'medium'});padding:10px 14px;margin-bottom:4px;border-radius:0 3px 3px 0">
+            <div style="background:var(--surface);border-left:3px solid var(--{'critical' if sev == 'critical' else 'high' if sev == 'high' else 'medium'});padding:10px 16px;margin-bottom:4px;border-radius:0 var(--radius) var(--radius) 0">
               <div style="display:flex;align-items:center;gap:8px">
-                <span style="font-family:'Space Mono',monospace;font-size:13px;color:var(--amber)">{chg.get('change_type', '').replace('_', ' ').upper()}</span>
-                <span style="font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text)">{chg.get('entity_name', '')}</span>
-                <span class="badge {sev_badge.get(sev, 'badge-info')}" style="margin-left:auto">{sev.upper()}</span>
+                <span style="font-size:12px;font-weight:600;color:var(--text-secondary)">{chg.get('change_type', '').replace('_', ' ').title()}</span>
+                <span style="font-family:var(--font-mono);font-size:13px;color:var(--text)">{chg.get('entity_name', '')}</span>
+                <span class="badge {sev_badge.get(sev, 'badge-info')}" style="margin-left:auto">{sev.capitalize()}</span>
               </div>
             </div>
             """), unsafe_allow_html=True)
@@ -271,7 +268,7 @@ if "ds_scan_result" in st.session_state:
     # Flagged columns table
     scan_results = comp.get("scan_results", [])
     if scan_results:
-        st.markdown('<div class="caption-label" style="margin:20px 0 8px">FLAGGED COLUMNS</div>', unsafe_allow_html=True)
+        st.markdown('<div class="caption-label" style="margin:20px 0 8px">Flagged columns</div>', unsafe_allow_html=True)
 
         col_filter1, col_filter2 = st.columns(2)
         with col_filter1:
@@ -305,15 +302,15 @@ if "ds_scan_result" in st.session_state:
             st.info("No results match current filters.")
     else:
         st.markdown(textwrap.dedent("""
-        <div style="text-align:center;padding:40px;border:1px solid var(--low);background:rgba(79,209,128,0.04);border-radius:4px;margin-top:16px">
-          <div style="font-family:'Space Mono',monospace;font-size:37px;margin-bottom:12px">✓</div>
-          <div style="font-family:'Space Mono',monospace;font-size:17px;color:var(--low);letter-spacing:0.1em">NO COMPLIANCE ISSUES DETECTED</div>
-          <div style="font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text-muted);margin-top:6px">All columns passed the compliance rules engine.</div>
+        <div style="text-align:center;padding:40px;border:1px solid var(--low-border);background:var(--low-bg);border-radius:var(--radius-xl);margin-top:16px">
+          <div style="font-size:36px;margin-bottom:12px">✓</div>
+          <div style="font-size:16px;font-weight:600;color:var(--low);margin-bottom:6px">No compliance issues detected</div>
+          <div style="font-size:14px;color:var(--text-muted)">All columns passed the compliance rules engine.</div>
         </div>
         """), unsafe_allow_html=True)
 
 # ── RECENT SCANS ───────────────────────────────────────────────────────────────
-st.markdown('<div class="caption-label" style="margin:24px 0 10px">RECENT SCANS FOR THIS SOURCE</div>', unsafe_allow_html=True)
+st.markdown('<div class="caption-label" style="margin:24px 0 10px">Recent scans for this source</div>', unsafe_allow_html=True)
 recent = DataSourceDB.get_scan_runs(source_id, limit=8)
 
 if recent:
@@ -321,17 +318,17 @@ if recent:
         rl = run.get("highest_risk", "low")
         rc = {"critical": "var(--red)", "high": "var(--high)", "medium": "var(--medium)", "low": "var(--low)"}.get(rl, "var(--text-muted)")
         st.markdown(textwrap.dedent(f"""
-        <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:4px">
-          <div style="background:var(--surface);padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-muted)">{run.get('started_at', '')[:16]}</div>
-          <div style="background:var(--surface);padding:10px 14px;font-family:'Space Mono',monospace;font-size:13px;color:{rc}">{rl.upper()}</div>
-          <div style="background:var(--surface);padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--amber)">{run.get('total_flags', 0)} flags</div>
-          <div style="background:var(--surface);padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-muted)">{run.get('status', '').upper()}</div>
-          <div style="background:var(--surface);padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-muted)">{run.get('scan_id', '')[:10]}</div>
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:4px">
+          <div style="background:var(--surface);padding:10px 14px;font-family:var(--font-mono);font-size:12px;color:var(--text-muted)">{run.get('started_at', '')[:16]}</div>
+          <div style="background:var(--surface);padding:10px 14px;font-size:12px;font-weight:600;color:{rc}">{rl.capitalize()}</div>
+          <div style="background:var(--surface);padding:10px 14px;font-family:var(--font-mono);font-size:12px;color:var(--text)">{run.get('total_flags', 0)} flags</div>
+          <div style="background:var(--surface);padding:10px 14px;font-family:var(--font-mono);font-size:12px;color:var(--text-muted)">{run.get('status', '').upper()}</div>
+          <div style="background:var(--surface);padding:10px 14px;font-family:var(--font-mono);font-size:12px;color:var(--text-muted)">{run.get('scan_id', '')[:10]}</div>
         </div>
         """), unsafe_allow_html=True)
 else:
     st.markdown(textwrap.dedent("""
-    <div style="font-family:'Space Mono',monospace;font-size:14px;color:var(--text-muted);text-align:center;padding:20px;border:1px dashed var(--border);border-radius:3px">
-      NO PREVIOUS SCANS FOR THIS SOURCE
+    <div style="font-size:14px;color:var(--text-muted);text-align:center;padding:24px;border:1px dashed var(--border);border-radius:var(--radius-lg)">
+      No previous scans for this source
     </div>
     """), unsafe_allow_html=True)

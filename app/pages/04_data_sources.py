@@ -22,19 +22,15 @@ init_ds_db()
 
 # ── PAGE HEADER ────────────────────────────────────────────────────────────────
 st.markdown(textwrap.dedent("""
-<div class="animate-fadein" style="padding:0 0 24px">
-  <div class="caption-label">MODULE 04</div>
-  <h1 style="font-family:'Space Mono',monospace;font-size:33px;font-weight:700;color:var(--text);margin:6px 0 4px">
-    DATA <span style="color:var(--amber)">SOURCES</span>
-  </h1>
-  <p style="color:var(--text-muted);font-size:17px;margin:0">
-    Register and manage database, cloud storage, and data warehouse connections.
-  </p>
+<div class="page-header">
+  <span class="module-label">Module 04</span>
+  <h1>Data Sources</h1>
+  <p>Register and manage database, cloud storage, and data warehouse connections.</p>
 </div>
 """), unsafe_allow_html=True)
 
 # ── TABS ───────────────────────────────────────────────────────────────────────
-tab_list, tab_add, tab_alerts = st.tabs(["◈  REGISTERED SOURCES", "⬡  ADD NEW SOURCE", "⟁  ALERT CONFIG"])
+tab_list, tab_add, tab_alerts = st.tabs(["Registered Sources", "Add New Source", "Alert Config"])
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # TAB 1 — REGISTERED SOURCES
@@ -44,19 +40,19 @@ with tab_list:
 
     if not sources:
         st.markdown(textwrap.dedent("""
-        <div style="text-align:center;padding:64px 24px;border:1px dashed var(--border);border-radius:4px;margin-top:24px">
-          <div style="font-family:'Space Mono',monospace;font-size:53px;color:var(--border-bright);margin-bottom:16px">◎</div>
-          <div style="font-family:'Space Mono',monospace;font-size:16px;color:var(--text-muted);letter-spacing:0.1em;margin-bottom:8px">NO DATA SOURCES REGISTERED</div>
-          <div style="font-family:'DM Sans',sans-serif;font-size:16px;color:var(--text-muted)">
-            Switch to the <strong>ADD NEW SOURCE</strong> tab to connect your first data source.
+        <div style="text-align:center;padding:64px 24px;border:1px dashed var(--border);border-radius:var(--radius-xl);margin-top:24px">
+          <div style="font-size:40px;color:var(--border-bright);margin-bottom:16px">◎</div>
+          <div style="font-size:15px;font-weight:600;color:var(--text-secondary);margin-bottom:8px">No data sources registered</div>
+          <div style="font-size:14px;color:var(--text-muted)">
+            Switch to the <strong>Add New Source</strong> tab to connect your first data source.
           </div>
         </div>
         """), unsafe_allow_html=True)
     else:
         st.markdown(textwrap.dedent(f"""
-        <div style="display:inline-flex;align-items:center;gap:16px;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:12px 20px;margin-bottom:20px">
-          <div class="caption-label">REGISTERED SOURCES</div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:33px;font-weight:700;color:var(--amber)">{len(sources)}</div>
+        <div style="display:inline-flex;align-items:center;gap:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 22px;margin-bottom:20px">
+          <div class="caption-label">Registered sources</div>
+          <div style="font-family:var(--font-mono);font-size:30px;font-weight:600;color:var(--text)">{len(sources)}</div>
         </div>
         """), unsafe_allow_html=True)
 
@@ -71,27 +67,27 @@ with tab_list:
             col_info, col_actions = st.columns([4, 1])
             with col_info:
                 st.markdown(textwrap.dedent(f"""
-                <div style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:16px 20px;margin-bottom:8px">
-                  <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
-                    <span style="font-size:24px">{meta['icon']}</span>
+                <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:18px 22px;margin-bottom:8px">
+                  <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+                    <span style="font-size:22px">{meta['icon']}</span>
                     <div>
-                      <div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--text)">{src['name']}</div>
-                      <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-muted)">{meta['label']} · {meta['category']}</div>
+                      <div style="font-size:15px;font-weight:600;color:var(--text)">{src['name']}</div>
+                      <div style="font-family:var(--font-mono);font-size:12px;color:var(--text-muted)">{meta['label']} &nbsp;·&nbsp; {meta['category']}</div>
                     </div>
-                    <span class="badge {status_badges.get(status, 'badge-info')}" style="margin-left:auto">{status.upper()}</span>
+                    <span class="badge {status_badges.get(status, 'badge-info')}" style="margin-left:auto">{status.capitalize()}</span>
                   </div>
-                  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)">
-                    <div style="background:var(--surface-2);padding:8px 12px">
-                      <div class="caption-label" style="margin-bottom:2px">SOURCE ID</div>
-                      <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-muted)">{src['source_id'][:12]}…</div>
+                  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:var(--radius);overflow:hidden">
+                    <div style="background:var(--surface-2);padding:10px 14px">
+                      <div class="caption-label" style="margin-bottom:3px">Source ID</div>
+                      <div style="font-family:var(--font-mono);font-size:12px;color:var(--text-muted)">{src['source_id'][:12]}…</div>
                     </div>
-                    <div style="background:var(--surface-2);padding:8px 12px">
-                      <div class="caption-label" style="margin-bottom:2px">LAST CONNECTED</div>
-                      <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-muted)">{last_conn}</div>
+                    <div style="background:var(--surface-2);padding:10px 14px">
+                      <div class="caption-label" style="margin-bottom:3px">Last connected</div>
+                      <div style="font-family:var(--font-mono);font-size:12px;color:var(--text-muted)">{last_conn}</div>
                     </div>
-                    <div style="background:var(--surface-2);padding:8px 12px">
-                      <div class="caption-label" style="margin-bottom:2px">AUTO MONITOR</div>
-                      <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-muted)">{'✓ ' + str(src.get('scan_interval_minutes', 60)) + 'min' if src.get('auto_monitor') else '— Off'}</div>
+                    <div style="background:var(--surface-2);padding:10px 14px">
+                      <div class="caption-label" style="margin-bottom:3px">Auto monitor</div>
+                      <div style="font-family:var(--font-mono);font-size:12px;color:var(--text-muted)">{'\u2713 ' + str(src.get('scan_interval_minutes', 60)) + 'min' if src.get('auto_monitor') else '— Off'}</div>
                     </div>
                   </div>
                 </div>
@@ -100,7 +96,7 @@ with tab_list:
             with col_actions:
                 st.markdown('<div style="padding-top:16px"></div>', unsafe_allow_html=True)
 
-                if st.button("▶ TEST", key=f"test_{src['source_id']}", use_container_width=True):
+                if st.button("Test connection", key=f"test_{src['source_id']}", use_container_width=True):
                     with st.spinner("Testing connection…"):
                         try:
                             config = json.loads(src["connection_config"])
@@ -119,7 +115,7 @@ with tab_list:
                         except Exception as e:
                             st.error(f"Error: {e}")
 
-                if st.button("✕ REMOVE", key=f"del_{src['source_id']}", use_container_width=True):
+                if st.button("Remove source", key=f"del_{src['source_id']}", use_container_width=True):
                     DataSourceDB.delete_source(src["source_id"])
                     st.toast("Source removed", icon="🗑️")
                     st.rerun()
@@ -130,8 +126,8 @@ with tab_list:
 with tab_add:
     st.markdown(textwrap.dedent("""
     <div style="margin-bottom:20px">
-      <div class="caption-label">SELECT CONNECTOR TYPE</div>
-      <p style="color:var(--text-muted);font-size:15px;margin:4px 0 0">Choose the type of data source to connect.</p>
+      <div class="caption-label" style="margin-bottom:6px">Select connector type</div>
+      <p style="color:var(--text-muted);font-size:14px;margin:0">Choose the type of data source to connect.</p>
     </div>
     """), unsafe_allow_html=True)
 
@@ -168,15 +164,15 @@ with tab_add:
     fields = CONNECTOR_FIELDS.get(selected_type, [])
 
     st.markdown(textwrap.dedent(f"""
-    <div style="background:rgba(232,168,56,0.06);border:1px solid rgba(232,168,56,0.2);border-radius:3px;padding:10px 16px;margin:12px 0;font-family:'Space Mono',monospace;font-size:13px;color:var(--amber);letter-spacing:0.08em">
-      {meta['icon']} {meta['label']} · {meta['category']}
+    <div class="notice-banner">
+      {meta['icon']} {meta['label']} &nbsp;·&nbsp; {meta['category']}
     </div>
     """), unsafe_allow_html=True)
 
     with st.form("add_source_form", clear_on_submit=True):
         source_name = st.text_input("Connection Name", placeholder="e.g. Production Postgres, Analytics S3")
 
-        st.markdown('<div class="caption-label" style="margin:16px 0 8px">CONNECTION PARAMETERS</div>', unsafe_allow_html=True)
+        st.markdown('<div class="caption-label" style="margin:16px 0 8px">Connection parameters</div>', unsafe_allow_html=True)
 
         field_values = {}
         col_a, col_b = st.columns(2)
@@ -201,7 +197,7 @@ with tab_add:
 
         test_on_add = st.checkbox("Test connection before saving", value=True)
 
-        submitted = st.form_submit_button("⬡  REGISTER DATA SOURCE", type="primary", use_container_width=True)
+        submitted = st.form_submit_button("Register Data Source", type="primary", use_container_width=True)
 
     if submitted:
         if not source_name.strip():
@@ -260,8 +256,8 @@ with tab_add:
 with tab_alerts:
     st.markdown(textwrap.dedent("""
     <div style="margin-bottom:20px">
-      <div class="caption-label">ALERT CHANNELS</div>
-      <p style="color:var(--text-muted);font-size:15px;margin:4px 0 0">
+      <div class="caption-label" style="margin-bottom:6px">Alert channels</div>
+      <p style="color:var(--text-muted);font-size:14px;margin:0">
         Configure Slack, email, or webhook alerts for high-risk scans.
       </p>
     </div>
@@ -291,7 +287,7 @@ with tab_alerts:
         )
         cooldown = st.number_input("Cooldown (minutes) — suppress duplicates", min_value=0, max_value=1440, value=30)
 
-        alert_submitted = st.form_submit_button("⟁  SAVE ALERT CONFIG", type="primary", use_container_width=True)
+        alert_submitted = st.form_submit_button("Save Alert Config", type="primary", use_container_width=True)
 
     if alert_submitted and alert_name:
         import json
@@ -310,17 +306,17 @@ with tab_alerts:
     # Show existing configs
     configs = DataSourceDB.get_alert_configs()
     if configs:
-        st.markdown('<div class="caption-label" style="margin:20px 0 12px">ACTIVE ALERT CONFIGS</div>', unsafe_allow_html=True)
+        st.markdown('<div class="caption-label" style="margin:20px 0 12px">Active alert configs</div>', unsafe_allow_html=True)
         for cfg in configs:
             levels = cfg.get("trigger_risk_levels", [])
             if isinstance(levels, str):
                 levels = json.loads(levels)
             st.markdown(textwrap.dedent(f"""
-            <div style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:12px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 18px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
               <div>
-                <div style="font-family:'Space Mono',monospace;font-size:15px;color:var(--text)">{cfg['name']}</div>
-                <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-muted);margin-top:2px">{cfg['channel'].upper()} · triggers on: {', '.join(levels)}</div>
+                <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px">{cfg['name']}</div>
+                <div style="font-family:var(--font-mono);font-size:12px;color:var(--text-muted)">{cfg['channel'].upper()} &nbsp;·&nbsp; triggers on: {', '.join(levels)}</div>
               </div>
-              <span class="badge badge-low">ACTIVE</span>
+              <span class="badge badge-low">Active</span>
             </div>
             """), unsafe_allow_html=True)

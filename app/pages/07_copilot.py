@@ -17,70 +17,21 @@ st.markdown(GLOBAL_CSS, unsafe_allow_html=True)
 render_common_sidebar()
 init_ds_db()
 
-# ── EXTRA COPILOT STYLES ───────────────────────────────────────────────────────
-st.markdown("""
-<style>
-.copilot-msg-user {
-  background:rgba(232,168,56,0.10);
-  border:1px solid rgba(232,168,56,0.25);
-  border-radius:4px 4px 2px 4px;
-  padding:14px 18px;
-  margin:0 0 12px 48px;
-  font-family:'DM Sans',sans-serif;
-  font-size:16px;
-  color:#f5f0e8;
-}
-.copilot-msg-ai {
-  background:rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.08);
-  border-radius:2px 4px 4px 4px;
-  padding:14px 18px;
-  margin:0 48px 12px 0;
-  font-family:'DM Sans',sans-serif;
-  font-size:16px;
-  color:#c9c4b8;
-  line-height:1.7;
-}
-.copilot-msg-ai strong { color:#E8A838; }
-.copilot-label {
-  font-family:'Space Mono',monospace;
-  font-size:11px;
-  letter-spacing:0.1em;
-  color:#6b7280;
-  margin-bottom:4px;
-}
-.suggested-chip {
-  display:inline-block;
-  background:rgba(125,211,252,0.08);
-  border:1px solid rgba(125,211,252,0.2);
-  border-radius:20px;
-  padding:5px 14px;
-  font-family:'Space Mono',monospace;
-  font-size:12px;
-  color:#7dd3fc;
-  margin:4px;
-  cursor:pointer;
-}
-</style>
-""", unsafe_allow_html=True)
+# (Chat styles are defined in GLOBAL_CSS)
 
 # ── PAGE HEADER ────────────────────────────────────────────────────────────────
 col_head, col_clear = st.columns([5, 1])
 with col_head:
     st.markdown(textwrap.dedent("""
-    <div class="animate-fadein" style="padding:0 0 20px">
-      <div class="caption-label">MODULE 07</div>
-      <h1 style="font-family:'Space Mono',monospace;font-size:33px;font-weight:700;color:var(--text);margin:6px 0 4px">
-        AI <span style="color:var(--amber)">COPILOT</span>
-      </h1>
-      <p style="color:var(--text-muted);font-size:17px;margin:0">
-        Ask anything about your data sources, scan results, compliance policies, and risk posture.
-      </p>
+    <div class="page-header" style="padding-bottom:20px">
+      <span class="module-label">Module 07</span>
+      <h1>AI Copilot</h1>
+      <p>Ask anything about your data sources, scan results, compliance policies, and risk posture.</p>
     </div>
     """), unsafe_allow_html=True)
 with col_clear:
     st.markdown('<div style="padding-top:52px"></div>', unsafe_allow_html=True)
-    if st.button("✕ CLEAR", use_container_width=True):
+    if st.button("× Clear chat", use_container_width=True):
         st.session_state.copilot_messages = []
         st.rerun()
 

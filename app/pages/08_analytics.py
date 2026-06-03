@@ -17,35 +17,36 @@ from storage.database import get_all_scans
 from app.styles.theme import GLOBAL_CSS
 from app.components.ui import metric_grid, empty_state, section_divider
 
-# ── Noir Amber Plotly theme helper ────────────────────────────────────────────
-def _noir_bar(x_vals, y_vals, color: str = "#E8A838", name: str = "") -> go.Figure:
-    """Create a Plotly bar chart styled for the Noir Amber dark theme."""
+# ── Enterprise Plotly theme helper ────────────────────────────────────────────────────────────────
+def _noir_bar(x_vals, y_vals, color: str = "#6366F1", name: str = "") -> go.Figure:
+    """Create a Plotly bar chart styled for the enterprise dark theme."""
     fig = go.Figure(go.Bar(
         x=x_vals,
         y=y_vals,
         marker_color=color,
         marker_line_color="rgba(0,0,0,0)",
+        marker_line_width=0,
         name=name,
     ))
     fig.update_layout(
-        paper_bgcolor="#141414",
-        plot_bgcolor="#141414",
-        font=dict(family="'Space Mono', monospace", color="#7A7A7A", size=11),
+        paper_bgcolor="#1C1F2B",
+        plot_bgcolor="#1C1F2B",
+        font=dict(family="Inter, sans-serif", color="#64748B", size=11),
         margin=dict(l=0, r=0, t=8, b=0),
         height=220,
         showlegend=False,
         xaxis=dict(
             showgrid=False,
             zeroline=False,
-            tickfont=dict(color="#7A7A7A", size=10),
-            linecolor="#2A2A2A",
+            tickfont=dict(color="#64748B", size=10),
+            linecolor="#2E3347",
         ),
         yaxis=dict(
             showgrid=True,
-            gridcolor="#2A2A2A",
+            gridcolor="rgba(46,51,71,0.8)",
             zeroline=False,
-            tickfont=dict(color="#7A7A7A", size=10),
-            linecolor="#2A2A2A",
+            tickfont=dict(color="#64748B", size=10),
+            linecolor="#2E3347",
         ),
     )
     return fig
@@ -55,14 +56,10 @@ st.markdown(GLOBAL_CSS, unsafe_allow_html=True)
 
 # ── PAGE HEADER ────────────────────────────────────────────────────────────────
 st.markdown(textwrap.dedent("""
-<div class="animate-fadein" style="padding:0 0 24px">
-  <div class="caption-label">MODULE 08</div>
-  <h1 style="font-family:'Space Mono',monospace; font-size:33px; font-weight:700; color:var(--text); margin:6px 0 4px; letter-spacing:-0.01em">
-    TELEMETRY <span style="color:var(--amber)">&</span> ANALYTICS
-  </h1>
-  <p style="color:var(--text-muted); font-size:17px; margin:0">
-    Monitor pipeline latency, token consumption, and estimated LLM cost efficiency.
-  </p>
+<div class="page-header">
+  <span class="module-label">Module 08</span>
+  <h1>Telemetry &amp; Analytics</h1>
+  <p>Monitor pipeline latency, token consumption, and estimated LLM cost efficiency.</p>
 </div>
 """), unsafe_allow_html=True)
 
@@ -72,7 +69,7 @@ scans = get_all_scans()
 if not scans:
     st.markdown(
         empty_state(
-            title="NO TELEMETRY RECORDED",
+            title="No telemetry recorded",
             subtitle="Your analytics board is empty. Run a scan to populate telemetry.",
             icon="📊"
         ),

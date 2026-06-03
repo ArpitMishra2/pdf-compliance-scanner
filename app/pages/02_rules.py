@@ -19,17 +19,13 @@ st.markdown(GLOBAL_CSS, unsafe_allow_html=True)
 
 # ── PAGE HEADER ────────────────────────────────────────────────────────────────
 st.markdown(textwrap.dedent("""
-<div class="animate-fadein" style="padding:0 0 24px">
-  <div class="caption-label">MODULE 02</div>
-  <h1 style="font-family:'Space Mono',monospace;font-size:33px;font-weight:700;color:var(--text);margin:6px 0 4px">
-    DETECTION <span style="color:var(--amber)">RULES</span>
-  </h1>
-  <p style="color:var(--text-muted);font-size:17px;margin:0">
-    Configure what gets flagged. Changes apply on the next scan — no restart required.
-  </p>
+<div class="page-header">
+  <span class="module-label">Module 02</span>
+  <h1>Detection Rules</h1>
+  <p>Configure what gets flagged. Changes apply on the next scan — no restart required.</p>
 </div>
-<div style="background:rgba(232,168,56,0.06);border:1px solid rgba(232,168,56,0.2);border-radius:3px;padding:10px 16px;margin-bottom:24px;font-family:'Space Mono',monospace;font-size:13px;color:var(--amber);letter-spacing:0.08em">
-  ⚡ LIVE CONFIG — All rules are persisted to rules.json and loaded on next pipeline run
+<div class="notice-banner">
+  ⚡️ Live config — all rules are persisted to rules.json and loaded on next pipeline run
 </div>
 """), unsafe_allow_html=True)
 
@@ -39,13 +35,13 @@ with st.form("compliance_rules_form"):
 
     # ── PII DETECTION ──────────────────────────────────────────────────────
     st.markdown(textwrap.dedent("""
-    <div style="display:flex;align-items:center;gap:12px;padding:16px 0 12px;border-bottom:1px solid var(--border);margin-bottom:16px">
-      <div style="width:3px;height:20px;background:var(--red);border-radius:2px"></div>
+    <div style="display:flex;align-items:center;gap:12px;padding:16px 0 12px;border-bottom:1px solid var(--border-subtle);margin-bottom:16px">
+      <div style="width:3px;height:20px;background:var(--critical);border-radius:2px"></div>
       <div>
-        <div class="caption-label" style="color:var(--red)">DETECTION MODULE</div>
-        <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--text)">PII DETECTION</div>
+        <div class="caption-label" style="color:var(--critical);margin-bottom:3px">Detection module</div>
+        <div style="font-size:16px;font-weight:600;color:var(--text)">PII Detection</div>
       </div>
-      <div class="badge badge-critical" style="margin-left:auto">ACTIVE</div>
+      <span class="badge badge-critical" style="margin-left:auto">Active</span>
     </div>
     """), unsafe_allow_html=True)
 
@@ -71,14 +67,14 @@ with st.form("compliance_rules_form"):
 
     # ── CONFIDENTIALITY DETECTION ──────────────────────────────────────────
     st.markdown(textwrap.dedent("""
-    <div style="height:1px;background:var(--border);margin:24px 0"></div>
-    <div style="display:flex;align-items:center;gap:12px;padding:16px 0 12px;border-bottom:1px solid var(--border);margin-bottom:16px">
+    <div style="height:1px;background:var(--border-subtle);margin:24px 0"></div>
+    <div style="display:flex;align-items:center;gap:12px;padding:16px 0 12px;border-bottom:1px solid var(--border-subtle);margin-bottom:16px">
       <div style="width:3px;height:20px;background:var(--high);border-radius:2px"></div>
       <div>
-        <div class="caption-label" style="color:var(--high)">DETECTION MODULE</div>
-        <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--text)">CONFIDENTIALITY DETECTION</div>
+        <div class="caption-label" style="color:var(--high);margin-bottom:3px">Detection module</div>
+        <div style="font-size:16px;font-weight:600;color:var(--text)">Confidentiality Detection</div>
       </div>
-      <div class="badge badge-high" style="margin-left:auto">ACTIVE</div>
+      <span class="badge badge-high" style="margin-left:auto">Active</span>
     </div>
     """), unsafe_allow_html=True)
 
@@ -102,9 +98,9 @@ with st.form("compliance_rules_form"):
 
     # ── CUSTOM KEYWORDS ────────────────────────────────────────────────────
     st.markdown(textwrap.dedent("""
-    <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:3px;padding:12px 14px;margin-bottom:8px;margin-top:12px">
-      <div class="caption-label" style="margin-bottom:4px">CUSTOM KEYWORD TARGETING</div>
-      <div style="font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text-muted)">
+    <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:8px;margin-top:12px">
+      <div class="caption-label" style="margin-bottom:4px">Custom keyword targeting</div>
+      <div style="font-size:13px;color:var(--text-muted)">
         One keyword per line · case-insensitive · flagged as CUSTOM_KEYWORD
       </div>
     </div>
@@ -121,14 +117,14 @@ with st.form("compliance_rules_form"):
 
     # ── ENCODING & LANGUAGE ────────────────────────────────────────────────
     st.markdown(textwrap.dedent("""
-    <div style="height:1px;background:var(--border);margin:24px 0"></div>
-    <div style="display:flex;align-items:center;gap:12px;padding:16px 0 12px;border-bottom:1px solid var(--border);margin-bottom:16px">
-      <div style="width:3px;height:20px;background:var(--ice);border-radius:2px"></div>
+    <div style="height:1px;background:var(--border-subtle);margin:24px 0"></div>
+    <div style="display:flex;align-items:center;gap:12px;padding:16px 0 12px;border-bottom:1px solid var(--border-subtle);margin-bottom:16px">
+      <div style="width:3px;height:20px;background:var(--info);border-radius:2px"></div>
       <div>
-        <div class="caption-label" style="color:var(--ice)">DETECTION MODULE</div>
-        <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--text)">ENCODING & LANGUAGE</div>
+        <div class="caption-label" style="color:var(--info);margin-bottom:3px">Detection module</div>
+        <div style="font-size:16px;font-weight:600;color:var(--text)">Encoding &amp; Language</div>
       </div>
-      <div class="badge badge-info" style="margin-left:auto">ACTIVE</div>
+      <span class="badge badge-info" style="margin-left:auto">Active</span>
     </div>
     """), unsafe_allow_html=True)
 
@@ -154,14 +150,14 @@ with st.form("compliance_rules_form"):
 
     # ── ABUSE & UNLAWFUL CONTENT ───────────────────────────────────────────
     st.markdown(textwrap.dedent("""
-    <div style="height:1px;background:var(--border);margin:24px 0"></div>
-    <div style="display:flex;align-items:center;gap:12px;padding:16px 0 12px;border-bottom:1px solid var(--border);margin-bottom:16px">
+    <div style="height:1px;background:var(--border-subtle);margin:24px 0"></div>
+    <div style="display:flex;align-items:center;gap:12px;padding:16px 0 12px;border-bottom:1px solid var(--border-subtle);margin-bottom:16px">
       <div style="width:3px;height:20px;background:var(--medium);border-radius:2px"></div>
       <div>
-        <div class="caption-label" style="color:var(--medium)">DETECTION MODULE</div>
-        <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--text)">ABUSE & UNLAWFUL CONTENT</div>
+        <div class="caption-label" style="color:var(--medium);margin-bottom:3px">Detection module</div>
+        <div style="font-size:16px;font-weight:600;color:var(--text)">Abuse &amp; Unlawful Content</div>
       </div>
-      <div class="badge badge-medium" style="margin-left:auto">ACTIVE</div>
+      <span class="badge badge-medium" style="margin-left:auto">Active</span>
     </div>
     """), unsafe_allow_html=True)
 
@@ -182,17 +178,17 @@ with st.form("compliance_rules_form"):
 
     # ── SAVE BUTTON ────────────────────────────────────────────────────────
     st.markdown(textwrap.dedent("""
-    <div style="height:1px;background:var(--border);margin:24px 0"></div>
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
+    <div style="height:1px;background:var(--border-subtle);margin:24px 0"></div>
+    <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
       <div>
-        <div class="caption-label">SAVE CONFIGURATION</div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text-muted);margin-top:2px">Changes persist to rules.json immediately</div>
+        <div class="caption-label" style="margin-bottom:4px">Save configuration</div>
+        <div style="font-size:13px;color:var(--text-muted)">Changes persist to rules.json immediately</div>
       </div>
-      <div style="font-family:'Space Mono',monospace;font-size:12px;color:var(--text-muted);letter-spacing:0.1em">NEXT SCAN WILL USE NEW RULES</div>
+      <div style="font-size:12px;color:var(--text-muted)">Next scan will use new rules</div>
     </div>
     """), unsafe_allow_html=True)
 
-    submitted = st.form_submit_button("▶  SAVE RULES", type="primary", use_container_width=True)
+    submitted = st.form_submit_button("Save Rules", type="primary", use_container_width=True)
 
 if submitted:
     custom_keywords_list = [
@@ -247,20 +243,20 @@ if submitted:
     save_rules(updated_rules)
 
     st.markdown(textwrap.dedent("""
-    <div style="background:rgba(79,209,128,0.06);border:1px solid var(--low);border-radius:3px;padding:14px 18px;display:flex;align-items:center;gap:12px;animation:fadeSlideUp 0.3s ease">
-      <div style="font-family:'Space Mono',monospace;font-size:21px;color:var(--low)">✓</div>
+    <div style="background:var(--low-bg);border:1px solid var(--low-border);border-radius:var(--radius);padding:14px 18px;display:flex;align-items:center;gap:12px;animation:fadeSlideUp 0.3s ease">
+      <span style="font-size:18px;color:var(--low)">&#10003;</span>
       <div>
-        <div style="font-family:'Space Mono',monospace;font-size:14px;color:var(--low);letter-spacing:0.1em">RULES SAVED SUCCESSFULLY</div>
-        <div style="font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text-muted);margin-top:2px">New detection rules will apply on the next scan run.</div>
+        <div style="font-size:14px;font-weight:600;color:var(--low);margin-bottom:2px">Rules saved successfully</div>
+        <div style="font-size:13px;color:var(--text-muted)">New detection rules will apply on the next scan run.</div>
       </div>
     </div>
     """), unsafe_allow_html=True)
 
 # ── RULE SANDBOX ─────────────────────────────────────────────────────────────
 st.markdown(textwrap.dedent("""
-<div style="height:1px;background:var(--border);margin:32px 0 24px"></div>
-<div class="caption-label">RULE SANDBOX (TEST ENVIRONMENT)</div>
-<h3 style="font-family:'Space Mono',monospace;font-size:19px;color:var(--text);margin:6px 0 16px">TEST CUSTOM KEYWORDS</h3>
+<div style="height:1px;background:var(--border-subtle);margin:32px 0 24px"></div>
+<div class="caption-label">Rule sandbox (test environment)</div>
+<div style="font-size:16px;font-weight:600;color:var(--text);margin:8px 0 16px">Test Custom Keywords</div>
 """), unsafe_allow_html=True)
 
 test_string = st.text_input("Enter a sample text to test if your currently saved custom keywords will catch it:", key="sandbox_input")
@@ -280,13 +276,13 @@ if test_string:
                 
     if matches:
         st.markdown(textwrap.dedent(f"""
-        <div style="background:rgba(255,69,69,0.08);border-left:3px solid var(--red);padding:12px 16px;margin-top:8px">
-          <span style="font-family:'Space Mono',monospace;font-size:14px;color:var(--red)">🚩 MATCH FOUND: {', '.join(matches)}</span>
+        <div style="background:var(--critical-bg);border-left:3px solid var(--critical);border-radius:0 var(--radius) var(--radius) 0;padding:12px 16px;margin-top:8px">
+          <span style="font-size:14px;font-weight:500;color:var(--critical)">🚩 Match found: {', '.join(matches)}</span>
         </div>
         """), unsafe_allow_html=True)
     else:
         st.markdown(textwrap.dedent("""
-        <div style="background:rgba(79,209,128,0.08);border-left:3px solid var(--low);padding:12px 16px;margin-top:8px">
-          <span style="font-family:'Space Mono',monospace;font-size:14px;color:var(--low)">✓ NO MATCHES FOUND (PASS)</span>
+        <div style="background:var(--low-bg);border-left:3px solid var(--low);border-radius:0 var(--radius) var(--radius) 0;padding:12px 16px;margin-top:8px">
+          <span style="font-size:14px;font-weight:500;color:var(--low)">✓ No matches found (pass)</span>
         </div>
         """), unsafe_allow_html=True)

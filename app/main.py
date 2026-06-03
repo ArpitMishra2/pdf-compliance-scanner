@@ -1,6 +1,6 @@
 # app/main.py
 """
-Streamlit entry point — Noir Amber war-room landing page.
+Streamlit entry point — enterprise landing page.
 """
 import sys
 import os
@@ -25,113 +25,57 @@ from app.components.ui import render_common_sidebar
 # ── SIDEBAR ────────────────────────────────────────────────────────────────────
 render_common_sidebar()
 
-# ── HERO BANNER ────────────────────────────────────────────────────────────────
+# ── PAGE HEADER ────────────────────────────────────────────────────────────────
 st.markdown(textwrap.dedent("""
-<div style="
-  background: linear-gradient(135deg, #0D0D0D 0%, #1A1200 50%, #0D0D0D 100%);
-  border-bottom: 1px solid #2A2A2A;
-  padding: 48px 32px 36px;
-  position: relative;
-  overflow: hidden;
-  border-radius: 4px;
-  margin-bottom: 24px;
-">
-  <!-- Noise grid pattern -->
-  <div style="
-    position:absolute; inset:0;
-    background-image: radial-gradient(circle, #E8A838 1px, transparent 1px);
-    background-size: 32px 32px;
-    opacity: 0.04;
-  "></div>
-
-  <!-- Diagonal decorative line -->
-  <div style="
-    position:absolute; width:1px; height:120%;
-    background:linear-gradient(to bottom, transparent, #E8A838 40%, transparent);
-    opacity:0.15; right:20%; top:-10%; transform:rotate(15deg);
-  "></div>
-
-  <!-- System Online badge -->
-  <div style="position:relative;z-index:1;margin-bottom:20px">
-    <span style="
-      display:inline-flex; align-items:center; gap:8px;
-      font-family:'Space Mono',monospace; font-size:13px; color:#4FD180;
-      letter-spacing:0.2em; text-transform:uppercase;
-    ">
-      <span style="
-        display:inline-block; width:6px; height:6px; border-radius:50%;
-        background:#4FD180; animation: pulseDot 2s ease-in-out infinite;
-      "></span>
-      SYSTEM ONLINE
-    </span>
-  </div>
-
-  <!-- Main title -->
-  <div style="position:relative;z-index:1">
-    <h1 style="
-      font-family:'Space Mono',monospace; font-weight:700;
-      font-size:clamp(36px,5vw,64px); line-height:1.1;
-      margin:0; padding:0;
-    ">
-      <span style="color:#F0EDE6">PDF COMPLIANCE</span><br>
-      <span style="color:#E8A838;text-shadow:0 0 40px rgba(232,168,56,0.3)">SCANNER</span>
-    </h1>
-  </div>
-
-  <!-- Subtitle -->
-  <p style="
-    position:relative; z-index:1;
-    font-family:'DM Sans',sans-serif; color:#7A7A7A;
-    font-size:18px; letter-spacing:0.04em; margin-top:12px;
-  ">
-    Automated PII · Confidentiality · Encoding · Abuse Detection
+<div class="page-header" style="padding-bottom:32px">
+  <span class="module-label">Document compliance platform</span>
+  <h1 style="font-size:32px;margin-bottom:10px">PDF Compliance Scanner</h1>
+  <p style="font-size:16px;max-width:560px">
+    Automated detection of PII, confidential data, encoding issues, and abusive content —
+    with AI-powered analysis and detailed compliance reports.
   </p>
-
-  <!-- Version tag -->
-  <div style="
-    position:absolute; bottom:16px; right:24px; z-index:1;
-    font-family:'Space Mono',monospace; font-size:13px; color:#3A3A3A;
-  ">
-    v2.0 — NOIR AMBER BUILD
-  </div>
 </div>
 """), unsafe_allow_html=True)
 
 # ── FEATURE CARDS (2×2 grid) ──────────────────────────────────────────────────
 cards = [
     {
-        "icon": "◈",
-        "badge_class": "badge-high",
-        "badge_label": "HIGH",
-        "title": "PII DETECTION",
-        "desc": "Emails, phone numbers, Aadhaar, SSN, passports — nothing slips past. Regex speed + AI brains.",
+        "icon": "🔍",
+        "icon_bg": "rgba(239,68,68,0.12)",
+        "badge_class": "badge-critical",
+        "badge_label": "Critical",
+        "title": "PII Detection",
+        "desc": "Emails, phone numbers, Aadhaar, SSN, passports — nothing slips past. Regex speed combined with AI semantic understanding.",
         "stat": "12 pattern types · dual-engine",
         "delay": "0s",
     },
     {
-        "icon": "⬡",
-        "badge_class": "badge-critical",
-        "badge_label": "CRITICAL",
-        "title": "CONFIDENTIALITY",
-        "desc": "AWS keys, GitHub tokens, passwords, salary data. If it shouldn't be here, it won't stay quiet.",
+        "icon": "🔐",
+        "icon_bg": "rgba(249,115,22,0.12)",
+        "badge_class": "badge-high",
+        "badge_label": "High",
+        "title": "Confidentiality",
+        "desc": "AWS keys, GitHub tokens, passwords, salary data. If it shouldn't be in the document, it won't stay undetected.",
         "stat": "15 credential patterns · AI semantic",
         "delay": "0.08s",
     },
     {
-        "icon": "⟁",
-        "badge_class": "badge-medium",
-        "badge_label": "MEDIUM",
-        "title": "ENCODING GUARD",
-        "desc": "UTF-8 validation, OCR corruption, multilingual content. Your documents should speak one language.",
+        "icon": "📝",
+        "icon_bg": "rgba(56,189,248,0.12)",
+        "badge_class": "badge-info",
+        "badge_label": "Medium",
+        "title": "Encoding Guard",
+        "desc": "UTF-8 validation, OCR corruption detection, multilingual content analysis. Documents should be consistent and readable.",
         "stat": "6 check types · rule-based",
         "delay": "0.16s",
     },
     {
-        "icon": "⚠",
-        "badge_class": "badge-critical",
-        "badge_label": "CRITICAL",
-        "title": "ABUSE DETECTION",
-        "desc": "Threats, hate speech, harassment, illegal content. Three detection layers because one is never enough.",
+        "icon": "🚨",
+        "icon_bg": "rgba(245,158,11,0.12)",
+        "badge_class": "badge-medium",
+        "badge_label": "Critical",
+        "title": "Abuse Detection",
+        "desc": "Threats, hate speech, harassment, illegal content. Three detection layers for comprehensive protection.",
         "stat": "3-layer detection · zero-tolerance",
         "delay": "0.24s",
     },
@@ -146,56 +90,44 @@ for col, card in zip(cols, cards):
         st.markdown(textwrap.dedent(f"""
         <div class="feature-card animate-fadein" style="animation-delay:{card['delay']}">
           <div class="card-icon-line">
-            <span class="card-icon">{card['icon']}</span>
+            <div class="card-icon" style="background:{card['icon_bg']}">{card['icon']}</div>
             <span class="badge {card['badge_class']}">{card['badge_label']}</span>
           </div>
           <h3 class="card-title">{card['title']}</h3>
           <p class="card-desc">{card['desc']}</p>
           <div class="card-footer-line">
-            <span class="mono" style="font-size:13px;color:var(--text-muted)">{card['stat']}</span>
+            <span style="font-family:var(--font-mono);font-size:12px;color:var(--text-muted)">{card['stat']}</span>
           </div>
         </div>
         """), unsafe_allow_html=True)
 
-# ── ANIMATED STATS TICKER ─────────────────────────────────────────────────────
+# ── STATS BAR ─────────────────────────────────────────────────────────────────
 st.markdown(textwrap.dedent("""
-<div class="stats-ticker-wrap">
-  <div class="stats-ticker">
-    <span class="ticker-item">⬤ PII PATTERNS LOADED: 12</span>
-    <span class="ticker-sep">///</span>
-    <span class="ticker-item">⬤ CREDENTIAL CHECKS: 15</span>
-    <span class="ticker-sep">///</span>
-    <span class="ticker-item">⬤ ABUSE CATEGORIES: 6</span>
-    <span class="ticker-sep">///</span>
-    <span class="ticker-item">⬤ AI PROVIDER: GROQ LLAMA 3</span>
-    <span class="ticker-sep">///</span>
-    <span class="ticker-item">⬤ PIPELINE: LANGGRAPH DAG</span>
-    <span class="ticker-sep">///</span>
-    <span class="ticker-item">⬤ REPORT ENGINE: REPORTLAB</span>
-    <span class="ticker-sep">///</span>
-    <!-- duplicate for seamless loop -->
-    <span class="ticker-item">⬤ PII PATTERNS LOADED: 12</span>
-    <span class="ticker-sep">///</span>
-    <span class="ticker-item">⬤ CREDENTIAL CHECKS: 15</span>
-    <span class="ticker-sep">///</span>
-    <span class="ticker-item">⬤ ABUSE CATEGORIES: 6</span>
-    <span class="ticker-sep">///</span>
-    <span class="ticker-item">⬤ AI PROVIDER: GROQ LLAMA 3</span>
-    <span class="ticker-sep">///</span>
-    <span class="ticker-item">⬤ PIPELINE: LANGGRAPH DAG</span>
-    <span class="ticker-sep">///</span>
-    <span class="ticker-item">⬤ REPORT ENGINE: REPORTLAB</span>
-    <span class="ticker-sep">///</span>
+<div class="stats-bar animate-fadein-2">
+  <div class="stats-bar-item">
+    <div class="stats-bar-value">12</div>
+    <div class="stats-bar-label">PII pattern types</div>
+  </div>
+  <div class="stats-bar-item">
+    <div class="stats-bar-value">15</div>
+    <div class="stats-bar-label">Credential patterns</div>
+  </div>
+  <div class="stats-bar-item">
+    <div class="stats-bar-value">3×</div>
+    <div class="stats-bar-label">Abuse detection layers</div>
+  </div>
+  <div class="stats-bar-item">
+    <div class="stats-bar-value" style="color:var(--indigo)">LangGraph</div>
+    <div class="stats-bar-label">Orchestration engine</div>
   </div>
 </div>
 """), unsafe_allow_html=True)
 
 # ── BOTTOM NAVIGATION HINT ────────────────────────────────────────────────────
 st.markdown(textwrap.dedent("""
-<div style="text-align:center; padding: 32px 0 16px; animation: fadeSlideUp 0.5s ease 0.4s both;">
-  <p style="font-family:'Space Mono',monospace; font-size:14px; color:var(--text-muted); letter-spacing:0.15em; text-transform:uppercase">
-    ← NAVIGATE VIA SIDEBAR TO BEGIN SCANNING
+<div style="text-align:center;padding:36px 0 12px;animation:fadeSlideUp 0.4s ease 0.3s both">
+  <p style="font-family:var(--font-sans);font-size:14px;color:var(--text-muted)">
+    Use the sidebar to navigate between modules and begin scanning
   </p>
-  <div style="width:1px;height:32px;background:linear-gradient(to bottom,var(--amber),transparent);margin:12px auto 0;"></div>
 </div>
 """), unsafe_allow_html=True)

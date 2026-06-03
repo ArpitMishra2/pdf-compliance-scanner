@@ -25,28 +25,24 @@ init_ds_db()
 
 # ── CHART THEME ────────────────────────────────────────────────────────────────
 CHART_LAYOUT = dict(
-    paper_bgcolor="rgba(0,0,0,0)",
-    plot_bgcolor="rgba(0,0,0,0)",
-    font=dict(family="JetBrains Mono, monospace", color="#9ca3af"),
-    xaxis=dict(gridcolor="rgba(255,255,255,0.05)", linecolor="rgba(255,255,255,0.08)"),
-    yaxis=dict(gridcolor="rgba(255,255,255,0.05)", linecolor="rgba(255,255,255,0.08)"),
+    paper_bgcolor="#1C1F2B",
+    plot_bgcolor="#1C1F2B",
+    font=dict(family="Inter, sans-serif", color="#64748B"),
+    xaxis=dict(gridcolor="rgba(46,51,71,0.8)", linecolor="#2E3347"),
+    yaxis=dict(gridcolor="rgba(46,51,71,0.8)", linecolor="#2E3347"),
     margin=dict(l=0, r=0, t=24, b=0),
 )
-AMBER = "#E8A838"
-ICE   = "#7dd3fc"
-RED   = "#f87171"
-GOLD  = "#facc15"
+INDIGO = "#6366F1"
+GREEN  = "#22C55E"
+RED    = "#EF4444"
+AMBER  = "#F59E0B"
 
 # ── PAGE HEADER ────────────────────────────────────────────────────────────────
 st.markdown(textwrap.dedent("""
-<div class="animate-fadein" style="padding:0 0 24px">
-  <div class="caption-label">MODULE 06</div>
-  <h1 style="font-family:'Space Mono',monospace;font-size:33px;font-weight:700;color:var(--text);margin:6px 0 4px">
-    SOURCE <span style="color:var(--amber)">ANALYTICS</span>
-  </h1>
-  <p style="color:var(--text-muted);font-size:17px;margin:0">
-    Risk trends, compliance scores, flagged column analytics, and change history.
-  </p>
+<div class="page-header">
+  <span class="module-label">Module 06</span>
+  <h1>Source Analytics</h1>
+  <p>Risk trends, compliance scores, flagged column analytics, and change history.</p>
 </div>
 """), unsafe_allow_html=True)
 
@@ -59,7 +55,7 @@ if not sources:
 latest_trends = DataSourceDB.get_all_latest_trends()
 trends_by_source = {t["source_id"]: t for t in latest_trends}
 
-st.markdown('<div class="caption-label" style="margin-bottom:10px">CROSS-SOURCE RISK OVERVIEW</div>', unsafe_allow_html=True)
+st.markdown('<div class="caption-label" style="margin-bottom:10px">Cross-source risk overview</div>', unsafe_allow_html=True)
 
 cols = st.columns(min(len(sources), 4))
 RISK_ORDER = ["low", "medium", "high", "critical"]
@@ -84,15 +80,15 @@ for i, src in enumerate(sources[:4]):
 
     with cols[i % 4]:
         st.markdown(textwrap.dedent(f"""
-        <div style="background:var(--surface);border:1px solid var(--border);padding:20px;border-radius:4px;text-align:center">
-          <div style="font-size:24px;margin-bottom:6px">{meta['icon']}</div>
-          <div style="font-family:'Space Mono',monospace;font-size:14px;color:var(--text);font-weight:700;margin-bottom:4px">{src['name'][:18]}</div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:38px;font-weight:700;color:{risk_color};margin:8px 0">{risk_score}</div>
-          <div class="caption-label" style="margin-bottom:6px">RISK SCORE</div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--low)">{compliance}</div>
-          <div class="caption-label" style="font-size:10px">COMPLIANCE</div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--amber);margin-top:6px">{violations}</div>
-          <div class="caption-label" style="font-size:10px">VIOLATIONS</div>
+        <div style="background:var(--surface);border:1px solid var(--border);padding:20px;border-radius:var(--radius-xl);text-align:center">
+          <div style="font-size:24px;margin-bottom:8px">{meta['icon']}</div>
+          <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px">{src['name'][:18]}</div>
+          <div style="font-family:var(--font-mono);font-size:36px;font-weight:700;color:{risk_color};margin:10px 0">{risk_score}</div>
+          <div class="caption-label" style="margin-bottom:8px">Risk score</div>
+          <div style="font-family:var(--font-mono);font-size:14px;color:var(--low)">{compliance}</div>
+          <div class="caption-label" style="font-size:10px">Compliance</div>
+          <div style="font-family:var(--font-mono);font-size:14px;color:var(--text-secondary);margin-top:8px">{violations}</div>
+          <div class="caption-label" style="font-size:10px">Violations</div>
         </div>
         """), unsafe_allow_html=True)
 
@@ -121,10 +117,10 @@ period_days = int(period.split()[0])
 trends = DataSourceDB.get_risk_trends(source_id, days=period_days)
 
 # ── RISK TREND LINE CHART ──────────────────────────────────────────────────────
-st.markdown('<div class="caption-label" style="margin:16px 0 8px">RISK SCORE OVER TIME</div>', unsafe_allow_html=True)
+st.markdown('<div class="caption-label" style="margin:16px 0 8px">Risk score over time</div>', unsafe_allow_html=True)
 if not trends:
     st.markdown(textwrap.dedent("""
-    <div style="text-align:center;padding:40px;border:1px dashed var(--border);border-radius:4px;font-family:'Space Mono',monospace;font-size:14px;color:var(--text-muted)">
+    <div style="text-align:center;padding:40px;border:1px dashed var(--border);border-radius:var(--radius-lg);font-size:14px;color:var(--text-muted)">
       No trend data yet — run a scan first.
     </div>
     """), unsafe_allow_html=True)
@@ -139,15 +135,15 @@ elif HAS_PLOTLY:
         x=dates, y=risk_scores,
         mode="lines+markers",
         name="Risk Score",
-        line=dict(color=AMBER, width=2),
-        marker=dict(size=6, color=AMBER),
+        line=dict(color=INDIGO, width=2),
+        marker=dict(size=6, color=INDIGO),
         fill="tozeroy",
-        fillcolor="rgba(232,168,56,0.08)",
+        fillcolor="rgba(99,102,241,0.08)",
     ))
     fig.add_trace(go.Bar(x=dates, y=pii_counts, name="PII Violations",
                          marker_color=RED, opacity=0.6))
     fig.add_trace(go.Bar(x=dates, y=conf_counts, name="Confidential",
-                         marker_color=ICE, opacity=0.6))
+                         marker_color=AMBER, opacity=0.6))
     fig.update_layout(**CHART_LAYOUT, height=280, barmode="stack",
                       legend=dict(orientation="h", y=1.0, x=0))
     st.plotly_chart(fig, use_container_width=True)
@@ -162,11 +158,11 @@ if trends and HAS_PLOTLY:
     latest = trends[-1]
     comp_pct = latest.get("compliance_pct", 100.0)
 
-    st.markdown('<div class="caption-label" style="margin:16px 0 8px">LATEST COMPLIANCE SCORE</div>', unsafe_allow_html=True)
+    st.markdown('<div class="caption-label" style="margin:16px 0 8px">Latest compliance score</div>', unsafe_allow_html=True)
     col_gauge, col_breakdown = st.columns([1, 2])
 
     with col_gauge:
-        gauge_color = RED if comp_pct < 70 else (AMBER if comp_pct < 90 else "#4fd180")
+        gauge_color = RED if comp_pct < 70 else (AMBER if comp_pct < 90 else GREEN)
         fig_gauge = go.Figure(go.Indicator(
             mode="gauge+number",
             value=comp_pct,
@@ -189,34 +185,34 @@ if trends and HAS_PLOTLY:
 
     with col_breakdown:
         st.markdown(f"""
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-top:8px">
-          <div style="background:var(--surface);padding:14px;border-radius:3px;text-align:center">
-            <div class="caption-label" style="margin-bottom:4px">PII FLAGS</div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:26px;color:{RED};font-weight:700">{latest.get('pii_count', 0)}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;padding-top:8px">
+          <div style="background:var(--surface);padding:14px;text-align:center">
+            <div class="caption-label" style="margin-bottom:4px">PII flags</div>
+            <div style="font-family:var(--font-mono);font-size:26px;color:{RED};font-weight:600">{latest.get('pii_count', 0)}</div>
           </div>
-          <div style="background:var(--surface);padding:14px;border-radius:3px;text-align:center">
-            <div class="caption-label" style="margin-bottom:4px">CONFIDENTIAL</div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:26px;color:{ICE};font-weight:700">{latest.get('confidential_count', 0)}</div>
+          <div style="background:var(--surface);padding:14px;text-align:center">
+            <div class="caption-label" style="margin-bottom:4px">Confidential</div>
+            <div style="font-family:var(--font-mono);font-size:26px;color:{AMBER};font-weight:600">{latest.get('confidential_count', 0)}</div>
           </div>
-          <div style="background:var(--surface);padding:14px;border-radius:3px;text-align:center">
-            <div class="caption-label" style="margin-bottom:4px">TOTAL VIOLATIONS</div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:26px;color:{AMBER};font-weight:700">{latest.get('total_violations', 0)}</div>
+          <div style="background:var(--surface);padding:14px;text-align:center">
+            <div class="caption-label" style="margin-bottom:4px">Total violations</div>
+            <div style="font-family:var(--font-mono);font-size:26px;color:var(--text);font-weight:600">{latest.get('total_violations', 0)}</div>
           </div>
-          <div style="background:var(--surface);padding:14px;border-radius:3px;text-align:center">
-            <div class="caption-label" style="margin-bottom:4px">RISK SCORE</div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:26px;color:{gauge_color};font-weight:700">{latest.get('risk_score', 0):.1f}</div>
+          <div style="background:var(--surface);padding:14px;text-align:center">
+            <div class="caption-label" style="margin-bottom:4px">Risk score</div>
+            <div style="font-family:var(--font-mono);font-size:26px;color:{gauge_color};font-weight:600">{latest.get('risk_score', 0):.1f}</div>
           </div>
         </div>
         """, unsafe_allow_html=True)
 
 # ── CHANGE HISTORY ─────────────────────────────────────────────────────────────
-st.markdown('<div class="caption-label" style="margin:24px 0 8px">SCHEMA CHANGE HISTORY</div>', unsafe_allow_html=True)
+st.markdown('<div class="caption-label" style="margin:24px 0 8px">Schema change history</div>', unsafe_allow_html=True)
 changes = DataSourceDB.get_changes(source_id, limit=20)
 
 if not changes:
     st.markdown(textwrap.dedent("""
-    <div style="font-family:'Space Mono',monospace;font-size:14px;color:var(--text-muted);text-align:center;padding:24px;border:1px dashed var(--border);border-radius:3px">
-      NO SCHEMA CHANGES RECORDED
+    <div style="font-size:14px;color:var(--text-muted);text-align:center;padding:24px;border:1px dashed var(--border);border-radius:var(--radius-lg)">
+      No schema changes recorded
     </div>
     """), unsafe_allow_html=True)
 else:
@@ -231,19 +227,19 @@ else:
         detail_str = json.dumps(detail, ensure_ascii=False)[:120]
 
         st.markdown(textwrap.dedent(f"""
-        <div style="background:var(--surface);border-left:3px solid var(--{'red' if sev=='critical' else 'high' if sev=='high' else 'medium' if sev=='medium' else 'low'});padding:10px 16px;margin-bottom:4px;border-radius:0 3px 3px 0">
+        <div style="background:var(--surface);border-left:3px solid var(--{'critical' if sev=='critical' else 'high' if sev=='high' else 'medium' if sev=='medium' else 'low'});padding:10px 16px;margin-bottom:4px;border-radius:0 var(--radius) var(--radius) 0">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-            <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-muted)">{ts}</span>
-            <span style="font-family:'Space Mono',monospace;font-size:13px;color:var(--amber)">{chg.get('change_type', '').replace('_', ' ').upper()}</span>
-            <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text)">{chg.get('entity_name', '')}</span>
-            <span class="badge {SEV_MAP.get(sev, 'badge-info')}" style="margin-left:auto">{sev.upper()}</span>
+            <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted)">{ts}</span>
+            <span style="font-size:12px;font-weight:600;color:var(--text-secondary)">{chg.get('change_type', '').replace('_', ' ').title()}</span>
+            <span style="font-family:var(--font-mono);font-size:12px;color:var(--text)">{chg.get('entity_name', '')}</span>
+            <span class="badge {SEV_MAP.get(sev, 'badge-info')}" style="margin-left:auto">{sev.capitalize()}</span>
           </div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-muted)">{detail_str}</div>
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted)">{detail_str}</div>
         </div>
         """), unsafe_allow_html=True)
 
 # ── SNAPSHOT HISTORY ───────────────────────────────────────────────────────────
-st.markdown('<div class="caption-label" style="margin:24px 0 8px">METADATA SNAPSHOT HISTORY</div>', unsafe_allow_html=True)
+st.markdown('<div class="caption-label" style="margin:24px 0 8px">Metadata snapshot history</div>', unsafe_allow_html=True)
 snapshots = DataSourceDB.get_snapshot_history(source_id, limit=8)
 
 if snapshots:

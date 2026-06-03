@@ -39,19 +39,15 @@ render_common_sidebar()
 
 # ── PAGE HEADER ────────────────────────────────────────────────────────────────
 st.markdown(textwrap.dedent("""
-<div class="animate-fadein" style="padding:0 0 24px">
-  <div class="caption-label">MODULE 01</div>
-  <h1 style="font-family:'Space Mono',monospace; font-size:33px; font-weight:700; color:var(--text); margin:6px 0 4px; letter-spacing:-0.01em">
-    UPLOAD <span style="color:var(--amber)">&</span> SCAN
-  </h1>
-  <p style="color:var(--text-muted); font-size:17px; margin:0">
-    Drop your document. We'll find everything that shouldn't be there.
-  </p>
+<div class="page-header">
+  <span class="module-label">Module 01</span>
+  <h1>Upload &amp; Scan</h1>
+  <p>Drop your document. The pipeline will detect everything that shouldn't be there.</p>
 </div>
 """), unsafe_allow_html=True)
 
 # ── CONFIGURATION & INPUT ──────────────────────────────────────────────────────
-st.markdown('<div class="caption-label animate-fadein" style="margin-bottom:8px">PIPELINE CONFIGURATION</div>', unsafe_allow_html=True)
+st.markdown('<div class="caption-label animate-fadein" style="margin-bottom:8px">Pipeline configuration</div>', unsafe_allow_html=True)
 col_cfg1, col_cfg2 = st.columns([1, 2])
 with col_cfg1:
     provider_choice = st.selectbox(
@@ -64,9 +60,9 @@ with col_cfg1:
         os.environ["AI_PROVIDER"] = provider_choice
 
 with col_cfg2:
-    st.markdown('<div style="font-family:\'Space Mono\',monospace; font-size:13px; color:var(--text-muted); padding-top:32px">Select the AI engine for semantic compliance checks</div>', unsafe_allow_html=True)
+    st.markdown('<div style="font-size:13px;color:var(--text-muted);padding-top:32px">Select the AI engine for semantic compliance checks</div>', unsafe_allow_html=True)
 
-st.markdown('<div class="caption-label animate-fadein" style="margin-bottom:8px;margin-top:16px">DOCUMENT INPUT</div>', unsafe_allow_html=True)
+st.markdown('<div class="caption-label animate-fadein" style="margin-bottom:8px;margin-top:16px">Document input</div>', unsafe_allow_html=True)
 
 uploaded_file = st.file_uploader(
     "Choose a PDF file",
@@ -78,39 +74,55 @@ uploaded_file = st.file_uploader(
 # ── NO FILE UPLOADED — detection capabilities showcase ─────────────────────────
 if uploaded_file is None:
     st.markdown(textwrap.dedent("""
-    <div class="animate-fadein-2" style="background:var(--surface); border:1px solid var(--border); border-radius:4px; padding:32px; margin-top:16px">
-      <div class="caption-label" style="margin-bottom:20px">DETECTION CAPABILITIES</div>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border)">
-        <div style="background:var(--surface-2);padding:16px">
-          <div style="font-family:'Space Mono',monospace;font-size:13px;color:var(--amber);letter-spacing:0.1em;margin-bottom:8px">◈ PII DETECTION</div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text-muted);line-height:2">
+    <div class="animate-fadein-2" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:28px;margin-top:16px">
+      <div class="caption-label" style="margin-bottom:18px">Detection capabilities</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border-radius:var(--radius);overflow:hidden">
+        <div style="background:var(--surface-2);padding:18px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+            <span style="font-size:16px">🔍</span>
+            <span style="font-size:13px;font-weight:600;color:var(--text-secondary)">PII Detection</span>
+            <span class="badge badge-critical" style="margin-left:auto">Critical</span>
+          </div>
+          <div style="font-family:var(--font-mono);font-size:13px;color:var(--text-muted);line-height:2">
             john.doe@email.com → j***@e***.com<br>
             +91-9876543210 → ****3210<br>
             1234-5678-9012 → XXXX XXXX 9012<br>
             ABLDE1234F → A****1234F
           </div>
         </div>
-        <div style="background:var(--surface-2);padding:16px">
-          <div style="font-family:'Space Mono',monospace;font-size:13px;color:var(--red);letter-spacing:0.1em;margin-bottom:8px">⬡ CONFIDENTIALITY</div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text-muted);line-height:2">
+        <div style="background:var(--surface-2);padding:18px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+            <span style="font-size:16px">🔐</span>
+            <span style="font-size:13px;font-weight:600;color:var(--text-secondary)">Confidentiality</span>
+            <span class="badge badge-high" style="margin-left:auto">High</span>
+          </div>
+          <div style="font-family:var(--font-mono);font-size:13px;color:var(--text-muted);line-height:2">
             sk-abc123... → sk-abc…3 [CRITICAL]<br>
             AKIA1234... → AKIA1…PLE [CRITICAL]<br>
             password=hunter2 → [CRITICAL]<br>
             salary: $950,000 → [HIGH]
           </div>
         </div>
-        <div style="background:var(--surface-2);padding:16px">
-          <div style="font-family:'Space Mono',monospace;font-size:13px;color:var(--ice);letter-spacing:0.1em;margin-bottom:8px">⟁ ENCODING</div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text-muted);line-height:2">
+        <div style="background:var(--surface-2);padding:18px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+            <span style="font-size:16px">📝</span>
+            <span style="font-size:13px;font-weight:600;color:var(--text-secondary)">Encoding Guard</span>
+            <span class="badge badge-info" style="margin-left:auto">Medium</span>
+          </div>
+          <div style="font-family:var(--font-mono);font-size:13px;color:var(--text-muted);line-height:2">
             UTF-8 validation<br>
             OCR corruption detection<br>
             Multilingual script ID<br>
             Language compliance check
           </div>
         </div>
-        <div style="background:var(--surface-2);padding:16px">
-          <div style="font-family:'Space Mono',monospace;font-size:13px;color:var(--medium);letter-spacing:0.1em;margin-bottom:8px">⚠ ABUSE DETECTION</div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text-muted);line-height:2">
+        <div style="background:var(--surface-2);padding:18px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+            <span style="font-size:16px">🚨</span>
+            <span style="font-size:13px;font-weight:600;color:var(--text-secondary)">Abuse Detection</span>
+            <span class="badge badge-medium" style="margin-left:auto">Critical</span>
+          </div>
+          <div style="font-family:var(--font-mono);font-size:13px;color:var(--text-muted);line-height:2">
             Threat language → [REDACTED]<br>
             Hate speech → [REDACTED]<br>
             Harassment patterns → [REDACTED]<br>
@@ -118,8 +130,8 @@ if uploaded_file is None:
           </div>
         </div>
       </div>
-      <div style="margin-top:20px; text-align:center; font-family:'Space Mono',monospace; font-size:13px; color:var(--text-muted); letter-spacing:0.1em">
-        ↑ UPLOAD A PDF TO BEGIN — ALL DETECTIONS SHOWN ABOVE WILL BE APPLIED AUTOMATICALLY
+      <div style="margin-top:18px;text-align:center;font-size:13px;color:var(--text-muted)">
+        Upload a PDF above to run all detection layers automatically
       </div>
     </div>
     """), unsafe_allow_html=True)
@@ -137,13 +149,13 @@ if uploaded_file is None:
     """), unsafe_allow_html=True)
     _video_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "arch-animations.mov"))
     st.markdown(textwrap.dedent("""
-    <div class="animate-fadein-2" style="margin-top:24px; padding:16px; border:1px solid var(--border); border-radius:4px; background:var(--surface)">
-      <div class="caption-label" style="margin-bottom:12px">ARCHITECTURE ANIMATION</div>
+    <div class="animate-fadein-2" style="margin-top:24px;padding:16px;border:1px solid var(--border);border-radius:var(--radius-xl);background:var(--surface)">
+      <div class="caption-label" style="margin-bottom:12px">Architecture overview</div>
     """), unsafe_allow_html=True)
     try:
         st.video(_video_path, autoplay=True, loop=True, muted=True)
     except Exception:
-        st.markdown("<div style='color:var(--text-muted);font-family:monospace;font-size:13px;padding:8px'>[ Video preview unavailable in this environment ]</div>", unsafe_allow_html=True)
+        st.markdown("<div style='color:var(--text-muted);font-size:13px;padding:8px'>[ Video preview unavailable in this environment ]</div>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
     
     st.stop()
@@ -158,34 +170,34 @@ else:
 fname_display = uploaded_file.name if len(uploaded_file.name) <= 40 else uploaded_file.name[:37] + "…"
 
 st.markdown(textwrap.dedent(f"""
-<div class="animate-fadein" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);margin:16px 0;border:1px solid var(--border)">
-  <div style="background:var(--surface);padding:14px 18px">
-    <div class="caption-label" style="margin-bottom:4px">FILENAME</div>
-    <div style="font-family:'JetBrains Mono',monospace;font-size:16px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{fname_display}</div>
+<div class="animate-fadein" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);margin:16px 0;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden">
+  <div style="background:var(--surface);padding:16px 20px">
+    <div class="caption-label" style="margin-bottom:6px">Filename</div>
+    <div style="font-family:var(--font-mono);font-size:14px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{fname_display}</div>
   </div>
-  <div style="background:var(--surface);padding:14px 18px">
-    <div class="caption-label" style="margin-bottom:4px">FILE SIZE</div>
-    <div style="font-family:'JetBrains Mono',monospace;font-size:23px;color:var(--amber);font-weight:700">{file_size_str}</div>
+  <div style="background:var(--surface);padding:16px 20px">
+    <div class="caption-label" style="margin-bottom:6px">File size</div>
+    <div style="font-family:var(--font-mono);font-size:22px;font-weight:600;color:var(--text)">{file_size_str}</div>
   </div>
-  <div style="background:var(--surface);padding:14px 18px">
-    <div class="caption-label" style="margin-bottom:4px">FORMAT</div>
-    <div style="font-family:'JetBrains Mono',monospace;font-size:16px;color:var(--low)">● PDF DOCUMENT</div>
+  <div style="background:var(--surface);padding:16px 20px">
+    <div class="caption-label" style="margin-bottom:6px">Format</div>
+    <div style="font-family:var(--font-sans);font-size:14px;color:var(--low);font-weight:500">● PDF Document</div>
   </div>
 </div>
 """), unsafe_allow_html=True)
 
 # ── SCAN BUTTON ────────────────────────────────────────────────────────────────
-st.markdown('<div class="caption-label" style="margin-bottom:8px">INITIATE SCAN</div>', unsafe_allow_html=True)
+st.markdown('<div class="caption-label" style="margin-bottom:8px">Initiate scan</div>', unsafe_allow_html=True)
 
 col_info, col_btn = st.columns([3, 1])
 with col_info:
     st.markdown(textwrap.dedent("""
-    <div style="font-family:'Space Mono',monospace; font-size:13px; color:var(--text-muted); padding-top:8px; letter-spacing:0.05em; text-align:right">
-      DETECTION: regex + ai · ESTIMATED: 2–5s/page
+    <div style="font-size:13px;color:var(--text-muted);padding-top:8px;text-align:right">
+      Detection: regex + AI &nbsp;·&nbsp; Estimated: 2–5s per page
     </div>
     """), unsafe_allow_html=True)
 with col_btn:
-    scan_btn = st.button("▶  RUN COMPLIANCE SCAN", type="primary", use_container_width=True)
+    scan_btn = st.button("Run Compliance Scan", type="primary", use_container_width=True)
 
 # ── RUN SCAN ───────────────────────────────────────────────────────────────────
 if scan_btn:
@@ -304,7 +316,7 @@ if "latest_result" in st.session_state:
     )
 
     # ── PAGE HEATMAP ───────────────────────────────────────────────────────
-    st.markdown('<div class="caption-label" style="margin-bottom:8px">PAGE-BY-PAGE RISK MATRIX</div>', unsafe_allow_html=True)
+    st.markdown('<div class="caption-label" style="margin-bottom:8px">Page-by-page risk matrix</div>', unsafe_allow_html=True)
     page_data = []
     for pr in result.get("page_results", []):
         page_data.append({
@@ -321,10 +333,10 @@ if "latest_result" in st.session_state:
 
     # ── REDACTION TABLE ────────────────────────────────────────────────────
     st.markdown(textwrap.dedent("""
-    <div style="padding:16px 0 12px;border-top:1px solid var(--border);margin-top:8px">
-      <div class="caption-label">REDACTION PREVIEW</div>
-      <h3 style="font-family:'Space Mono',monospace;font-size:19px;color:var(--text);margin:6px 0 4px">MASKED ENTITY TABLE</h3>
-      <p style="color:var(--text-muted);font-size:15px;margin:0;font-family:'JetBrains Mono',monospace">
+    <div style="padding:16px 0 12px;border-top:1px solid var(--border-subtle);margin-top:8px">
+      <div class="caption-label" style="margin-bottom:6px">Redaction preview</div>
+      <div style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:4px">Masked Entity Table</div>
+      <p style="color:var(--text-muted);font-size:14px;margin:0">
         Verified redaction output — what a compliant export would look like.
       </p>
     </div>
@@ -368,25 +380,25 @@ if "latest_result" in st.session_state:
                 },
             )
             st.markdown(textwrap.dedent(f"""
-            <div style="font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text-muted);margin-top:4px">
+            <div style="font-family:var(--font-sans);font-size:13px;color:var(--text-muted);margin-top:6px">
               Showing {len(filtered)} of {len(redaction_records)} total findings
             </div>
             """), unsafe_allow_html=True)
         else:
             st.markdown(textwrap.dedent("""
-            <div style="text-align:center;padding:24px;border:1px dashed var(--border);border-radius:3px;margin:8px 0">
-              <div style="font-family:'Space Mono',monospace;font-size:14px;color:var(--text-muted);letter-spacing:0.1em">
-                NO FINDINGS MATCH THE CURRENT FILTERS
+            <div style="text-align:center;padding:24px;border:1px dashed var(--border);border-radius:var(--radius-lg);margin:8px 0">
+              <div style="font-size:14px;color:var(--text-muted)">
+                No findings match the current filters
               </div>
             </div>
             """), unsafe_allow_html=True)
     else:
         quip = get_empty_state_quip()
         st.markdown(textwrap.dedent(f"""
-        <div style="text-align:center;padding:48px 24px;border:1px solid var(--low);background:rgba(79,209,128,0.04);border-radius:4px">
-          <div style="font-family:'Space Mono',monospace;font-size:37px;margin-bottom:16px">✓</div>
-          <div style="font-family:'Space Mono',monospace;font-size:17px;color:var(--low);letter-spacing:0.1em;margin-bottom:8px">DOCUMENT IS CLEAN</div>
-          <div style="font-family:'DM Sans',sans-serif;font-size:16px;color:var(--text-muted)">
+        <div style="text-align:center;padding:48px 24px;border:1px solid var(--low-border);background:var(--low-bg);border-radius:var(--radius-xl)">
+          <div style="font-size:36px;margin-bottom:14px">✓</div>
+          <div style="font-size:16px;font-weight:600;color:var(--low);margin-bottom:8px">Document is clean</div>
+          <div style="font-size:14px;color:var(--text-muted)">
             {quip}
           </div>
         </div>
@@ -396,18 +408,19 @@ if "latest_result" in st.session_state:
     report_path = result.get("report_path")
     if report_path and Path(report_path).exists():
         st.markdown(textwrap.dedent("""
-        <div style="margin-top:24px;padding:20px;background:var(--surface);border:1px solid var(--amber);border-radius:4px;display:flex;align-items:center;justify-content:space-between">
+        <div style="margin-top:24px;padding:18px 22px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);display:flex;align-items:center;justify-content:space-between">
           <div>
-            <div class="caption-label">COMPLIANCE REPORT</div>
-            <div style="font-family:'Space Mono',monospace;font-size:16px;color:var(--text);margin-top:4px">Full PDF report with findings, heatmap, and masked entity table</div>
+            <div class="caption-label" style="margin-bottom:4px">Compliance report ready</div>
+            <div style="font-size:14px;color:var(--text-secondary)">Full PDF report with findings, heatmap, and masked entity table</div>
           </div>
+          <span class="badge badge-low">Ready</span>
         </div>
         """), unsafe_allow_html=True)
         col_down1, col_down2 = st.columns(2)
         with col_down1:
             with open(report_path, "rb") as f:
                 st.download_button(
-                    label="↓  DOWNLOAD FULL COMPLIANCE REPORT (PDF)",
+                    label="↓  Download Compliance Report (PDF)",
                     data=f.read(),
                     file_name=f"compliance_report_{upload_id}.pdf",
                     mime="application/pdf",
@@ -419,7 +432,7 @@ if "latest_result" in st.session_state:
                 df = pd.DataFrame(redaction_records)
                 csv = df.to_csv(index=False).encode('utf-8')
                 st.download_button(
-                    label="↓  DOWNLOAD RAW DATA (CSV)",
+                    label="↓  Download Raw Data (CSV)",
                     data=csv,
                     file_name=f"compliance_data_{upload_id}.csv",
                     mime="text/csv",
