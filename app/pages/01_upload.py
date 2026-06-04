@@ -38,11 +38,13 @@ from app.components.ui import (
     render_sidebar_opener,
 )
 from app.components.sarcasm import get_stage_message, get_risk_quip, get_empty_state_quip
+from app.utils.session import require_login
 
 st.set_page_config(page_title="Upload & Scan", page_icon="⬡", layout="wide", initial_sidebar_state="expanded")
 st.markdown(GLOBAL_CSS, unsafe_allow_html=True)
 render_common_sidebar()
 render_sidebar_opener()
+current_user = require_login()
 
 
 # ── PAGE HEADER ────────────────────────────────────────────────────────────────
@@ -239,7 +241,7 @@ if scan_btn:
                 progress_bar.progress(95, text="Saving results…")
                 status_text.markdown(loading_message("Finalizing..."), unsafe_allow_html=True)
 
-        save_result(upload_id, uploaded_file.name, result)
+        save_result(upload_id, uploaded_file.name, result, user_id=current_user)
 
         # Complete
         progress_bar.progress(100, text="Scan complete")

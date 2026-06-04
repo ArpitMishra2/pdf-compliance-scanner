@@ -188,11 +188,12 @@ def render_sidebar_opener():
 
 
 def render_common_sidebar():
-    """Renders the standard Noir Amber sidebar branding and API settings expander."""
+    """Renders the standard Noir Amber sidebar branding, user identity widget, and API settings."""
     import streamlit as st
     import textwrap
     import os
-    
+    from app.utils.session import get_current_user, set_current_user, clear_current_user
+
     with st.sidebar:
         st.markdown(textwrap.dedent("""
         <div style="margin-top: 40px; padding: 4px 0 20px">
@@ -205,20 +206,57 @@ def render_common_sidebar():
         </div>
         """), unsafe_allow_html=True)
 
+        # ── USER IDENTITY ─────────────────────────────────────────────────────
+        current_user = get_current_user()
+        if current_user:
+            st.markdown(textwrap.dedent(f"""
+            <div style="background:rgba(232,168,56,0.07);border:1px solid rgba(232,168,56,0.25);
+                        border-radius:4px;padding:10px 14px;margin-bottom:12px">
+              <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-muted);
+                          letter-spacing:0.15em;text-transform:uppercase;margin-bottom:3px">
+                LOGGED IN AS
+              </div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:15px;
+                          font-weight:700;color:var(--amber)">
+                {current_user}
+              </div>
+            </div>
+            """), unsafe_allow_html=True)
+            if st.button("↩  SWITCH USER", use_container_width=True, key="_sidebar_logout"):
+                clear_current_user()
+                st.rerun()
+        else:
+            st.markdown(
+                '<div style="font-family:\'Space Mono\',monospace;font-size:11px;color:var(--text-muted);'
+                'margin-bottom:6px;letter-spacing:0.1em">ENTER USERNAME</div>',
+                unsafe_allow_html=True,
+            )
+            new_user = st.text_input(
+                "Username",
+                placeholder="e.g. alice",
+                label_visibility="collapsed",
+                key="_sidebar_username_input",
+            )
+            if st.button("⬡  LOGIN", use_container_width=True, key="_sidebar_login_btn"):
+                if new_user.strip():
+                    set_current_user(new_user.strip())
+                    st.rerun()
+                else:
+                    st.error("Enter a username first.")
 
         with st.expander("⚙️  API CONFIGURATION", expanded=False):
             st.markdown("<div style='font-size:13px; color:var(--text-muted); margin-bottom:8px'>Override .env keys dynamically</div>", unsafe_allow_html=True)
-            
+
             # Groq
             groq_key = st.text_input("Groq API Key", value=os.environ.get("GROQ_API_KEY", ""), type="password", help="Required for Llama3 models")
             if groq_key:
                 os.environ["GROQ_API_KEY"] = groq_key
-                
+
             # Gemini
             gemini_key = st.text_input("Gemini API Key", value=os.environ.get("GOOGLE_API_KEY", ""), type="password", help="Required if AI_PROVIDER=gemini")
             if gemini_key:
                 os.environ["GOOGLE_API_KEY"] = gemini_key
-                
+
             # Anthropic
             anthropic_key = st.text_input("Anthropic API Key", value=os.environ.get("ANTHROPIC_API_KEY", ""), type="password", help="Required if AI_PROVIDER=anthropic")
             if anthropic_key:

@@ -13,12 +13,18 @@ from pathlib import Path
 from storage.database import DataSourceDB, init_ds_db
 from connectors.factory import ConnectorFactory, CONNECTOR_META, CONNECTOR_FIELDS, SECRET_FIELDS
 from app.styles.theme import GLOBAL_CSS
+from app.utils.session import require_login
 
 st.set_page_config(page_title="Data Sources", page_icon="🔌", layout="wide", initial_sidebar_state="expanded")
 st.markdown(GLOBAL_CSS, unsafe_allow_html=True)
 
 # Ensure tables exist
 init_ds_db()
+
+from app.components.ui import render_common_sidebar, render_sidebar_opener
+render_common_sidebar()
+render_sidebar_opener()
+current_user = require_login()
 
 # ── PAGE HEADER ────────────────────────────────────────────────────────────────
 st.markdown(textwrap.dedent("""
@@ -40,7 +46,7 @@ tab_list, tab_add, tab_alerts = st.tabs(["◈  REGISTERED SOURCES", "⬡  ADD NE
 # TAB 1 — REGISTERED SOURCES
 # ═══════════════════════════════════════════════════════════════════════════════
 with tab_list:
-    sources = DataSourceDB.get_all_sources()
+    sources = DataSourceDB.get_all_sources(user_id=current_user)
 
     if not sources:
         st.markdown(textwrap.dedent("""
@@ -246,6 +252,7 @@ with tab_add:
                     "auto_monitor":          auto_monitor,
                     "scan_interval_minutes": scan_interval,
                     "status":                "active",
+                    "user_id":               current_user,
                 })
 
                 if added:

@@ -48,7 +48,8 @@ def init_db():
         for col_name, col_type in [
             ("total_tokens", "INTEGER DEFAULT 0"),
             ("execution_time_sec", "REAL DEFAULT 0.0"),
-            ("ai_provider", "TEXT DEFAULT 'groq'")
+            ("ai_provider", "TEXT DEFAULT 'groq'"),
+            ("user_id", "TEXT DEFAULT 'default'"),
         ]:
             try:
                 conn.execute(f"ALTER TABLE scans ADD COLUMN {col_name} {col_type}")
@@ -59,8 +60,8 @@ def init_db():
         conn.commit()
 
 
-def save_result(upload_id: str, pdf_name: str, result: dict) -> None:
-    """Save scan result to database."""
+def save_result(upload_id: str, pdf_name: str, result: dict, user_id: str = "default") -> None:
+    """Save scan result to database, scoped to user_id."""
     init_db()
     summary = result.get("summary", {})
 
@@ -69,8 +70,8 @@ def save_result(upload_id: str, pdf_name: str, result: dict) -> None:
             INSERT OR REPLACE INTO scans
             (upload_id, pdf_name, scanned_at, total_pages, total_flags, 
              highest_risk, status, result_json, report_path,
-             total_tokens, execution_time_sec, ai_provider)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+             total_tokens, execution_time_sec, ai_provider, user_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             upload_id,
             pdf_name,
@@ -84,6 +85,7 @@ def save_result(upload_id: str, pdf_name: str, result: dict) -> None:
             result.get("total_tokens_used", 0),
             result.get("scan_duration_seconds", 0.0),
             result.get("ai_provider_used", "groq"),
+            user_id,
         ))
         conn.commit()
 
@@ -105,8 +107,8 @@ def get_result(upload_id: str) -> dict | None:
     return result
 
 
-def get_all_scans() -> list:
-    """Get all scan records (metadata only, not full JSON)."""
+def get_all_scans(user_id: str = "default") -> list:
+    """Get scan records for a specific user (metadata only, not full JSON)."""
     init_db()
     with get_connection() as conn:
         rows = conn.execute("""
@@ -114,9 +116,10 @@ def get_all_scans() -> list:
                    total_flags, highest_risk, status, report_path,
                    total_tokens, execution_time_sec, ai_provider
             FROM scans 
+            WHERE user_id = ?
             ORDER BY scanned_at DESC 
             LIMIT 50
-        """).fetchall()
+        """, (user_id,)).fetchall()
     return [dict(row) for row in rows]
 
 
@@ -138,7 +141,7 @@ DS_MIGRATIONS = [
     CREATE TABLE IF NOT EXISTS data_sources (
         id              INTEGER PRIMARY KEY AUTOINCREMENT,
         source_id       TEXT UNIQUE NOT NULL,
-        name            TEXT NOT NULL UNIQUE,
+        name            TEXT NOT NULL,
         source_type     TEXT NOT NULL,
         connection_config TEXT NOT NULL,
         credentials_ref TEXT,
@@ -147,7 +150,8 @@ DS_MIGRATIONS = [
         scan_interval_minutes INTEGER DEFAULT 60,
         last_connected_at TEXT,
         created_at      TEXT DEFAULT (datetime('now')),
-        created_by      TEXT
+        created_by      TEXT,
+        user_id         TEXT DEFAULT 'default'
     )
     """,
     # metadata_snapshots
@@ -313,6 +317,15 @@ def init_ds_db():
     with get_connection() as conn:
         for sql in DS_MIGRATIONS:
             conn.execute(sql)
+        # Graceful migration: add user_id to data_sources if missing
+        for tbl, col, col_type in [
+            ("data_sources", "user_id", "TEXT DEFAULT 'default'"),
+            ("ds_scan_runs", "user_id", "TEXT DEFAULT 'default'"),
+        ]:
+            try:
+                conn.execute(f"ALTER TABLE {tbl} ADD COLUMN {col} {col_type}")
+            except sqlite3.OperationalError:
+                pass  # Already exists
         conn.commit()
 
 
@@ -329,8 +342,8 @@ class DataSourceDB:
                 conn.execute("""
                     INSERT INTO data_sources
                     (source_id, name, source_type, connection_config, credentials_ref,
-                     status, auto_monitor, scan_interval_minutes, created_by)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                     status, auto_monitor, scan_interval_minutes, created_by, user_id)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """, (
                     source["source_id"],
                     source["name"],
@@ -341,6 +354,7 @@ class DataSourceDB:
                     int(source.get("auto_monitor", False)),
                     source.get("scan_interval_minutes", 60),
                     source.get("created_by"),
+                    source.get("user_id", "default"),
                 ))
                 conn.commit()
                 return True
@@ -357,11 +371,13 @@ class DataSourceDB:
         return dict(row) if row else None
 
     @staticmethod
-    def get_all_sources() -> list:
+    def get_all_sources(user_id: str = "default") -> list:
+        """Return only sources owned by this user."""
         init_ds_db()
         with get_connection() as conn:
             rows = conn.execute(
-                "SELECT * FROM data_sources ORDER BY created_at DESC"
+                "SELECT * FROM data_sources WHERE user_id = ? ORDER BY created_at DESC",
+                (user_id,)
             ).fetchall()
         return [dict(r) for r in rows]
 
@@ -497,8 +513,8 @@ class DataSourceDB:
                 conn.execute("""
                     INSERT INTO ds_scan_runs
                     (scan_id, source_id, scan_type, trigger_change_id, status,
-                     started_at, initiated_by)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                     started_at, initiated_by, user_id)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 """, (
                     scan["scan_id"],
                     scan.get("source_id"),
@@ -507,6 +523,7 @@ class DataSourceDB:
                     "running",
                     scan.get("started_at", datetime.utcnow().isoformat()),
                     scan.get("initiated_by", "user"),
+                    scan.get("user_id", "default"),
                 ))
                 conn.commit()
                 return True
@@ -537,19 +554,22 @@ class DataSourceDB:
             conn.commit()
 
     @staticmethod
-    def get_scan_runs(source_id: str = None, limit: int = 30) -> list:
+    def get_scan_runs(source_id: str = None, limit: int = 30, user_id: str = "default") -> list:
+        """Return scan runs filtered by user. Optionally further filter by source_id."""
         init_ds_db()
         with get_connection() as conn:
             if source_id:
                 rows = conn.execute("""
-                    SELECT * FROM ds_scan_runs WHERE source_id = ?
+                    SELECT * FROM ds_scan_runs
+                    WHERE source_id = ? AND user_id = ?
                     ORDER BY started_at DESC LIMIT ?
-                """, (source_id, limit)).fetchall()
+                """, (source_id, user_id, limit)).fetchall()
             else:
                 rows = conn.execute("""
                     SELECT * FROM ds_scan_runs
+                    WHERE user_id = ?
                     ORDER BY started_at DESC LIMIT ?
-                """, (limit,)).fetchall()
+                """, (user_id, limit)).fetchall()
         return [dict(r) for r in rows]
 
     @staticmethod
@@ -650,8 +670,8 @@ class DataSourceDB:
         return [dict(r) for r in reversed(rows)]  # Chronological order
 
     @staticmethod
-    def get_all_latest_trends() -> list:
-        """Get latest risk entry per source for overview dashboard."""
+    def get_all_latest_trends(user_id: str = "default") -> list:
+        """Get latest risk entry per source for this user's overview dashboard."""
         init_ds_db()
         with get_connection() as conn:
             rows = conn.execute("""
@@ -661,7 +681,9 @@ class DataSourceDB:
                     FROM risk_trends GROUP BY source_id
                 ) latest ON rt.source_id = latest.source_id
                     AND rt.trend_date = latest.max_date
-            """).fetchall()
+                INNER JOIN data_sources ds ON rt.source_id = ds.source_id
+                WHERE ds.user_id = ?
+            """, (user_id,)).fetchall()
         return [dict(r) for r in rows]
 
     # ── Alert Configs ─────────────────────────────────────────────────────

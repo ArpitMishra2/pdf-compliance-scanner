@@ -19,12 +19,14 @@ from pathlib import Path
 from storage.database import get_all_scans, get_result, delete_scan
 from app.styles.theme import GLOBAL_CSS
 from app.components.ui import risk_badge, empty_state, render_sidebar_opener
+from app.utils.session import require_login
 
 st.set_page_config(page_title="Scan Archive", page_icon="⚠", layout="wide", initial_sidebar_state="expanded")
 st.markdown(GLOBAL_CSS, unsafe_allow_html=True)
 from app.components.ui import render_common_sidebar
 render_common_sidebar()
 render_sidebar_opener()
+current_user = require_login()
 
 
 # ── PAGE HEADER ────────────────────────────────────────────────────────────────
@@ -40,7 +42,7 @@ st.markdown(textwrap.dedent("""
 </div>
 """), unsafe_allow_html=True)
 
-scans = get_all_scans()
+scans = get_all_scans(user_id=current_user)
 
 # ── EMPTY STATE ────────────────────────────────────────────────────────────────
 if not scans:

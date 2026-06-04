@@ -12,10 +12,16 @@ from datetime import datetime
 from storage.database import DataSourceDB, init_ds_db
 from connectors.factory import CONNECTOR_META
 from app.styles.theme import GLOBAL_CSS
+from app.utils.session import require_login
 
 st.set_page_config(page_title="Data Source Scan", page_icon="⬡", layout="wide", initial_sidebar_state="expanded")
 st.markdown(GLOBAL_CSS, unsafe_allow_html=True)
 init_ds_db()
+
+from app.components.ui import render_common_sidebar, render_sidebar_opener
+render_common_sidebar()
+render_sidebar_opener()
+current_user = require_login()
 
 # ── PAGE HEADER ────────────────────────────────────────────────────────────────
 st.markdown(textwrap.dedent("""
@@ -30,7 +36,7 @@ st.markdown(textwrap.dedent("""
 </div>
 """), unsafe_allow_html=True)
 
-sources = DataSourceDB.get_all_sources()
+sources = DataSourceDB.get_all_sources(user_id=current_user)
 
 if not sources:
     st.markdown(textwrap.dedent("""
@@ -314,7 +320,7 @@ if "ds_scan_result" in st.session_state:
 
 # ── RECENT SCANS ───────────────────────────────────────────────────────────────
 st.markdown('<div class="caption-label" style="margin:24px 0 10px">RECENT SCANS FOR THIS SOURCE</div>', unsafe_allow_html=True)
-recent = DataSourceDB.get_scan_runs(source_id, limit=8)
+recent = DataSourceDB.get_scan_runs(source_id, limit=8, user_id=current_user)
 
 if recent:
     for run in recent:

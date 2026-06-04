@@ -11,6 +11,7 @@ from datetime import datetime, timedelta
 from storage.database import DataSourceDB, init_ds_db
 from connectors.factory import CONNECTOR_META
 from app.styles.theme import GLOBAL_CSS
+from app.utils.session import require_login
 
 try:
     import plotly.graph_objects as go
@@ -22,6 +23,11 @@ except ImportError:
 st.set_page_config(page_title="Source Analytics", page_icon="◈", layout="wide", initial_sidebar_state="expanded")
 st.markdown(GLOBAL_CSS, unsafe_allow_html=True)
 init_ds_db()
+
+from app.components.ui import render_common_sidebar, render_sidebar_opener
+render_common_sidebar()
+render_sidebar_opener()
+current_user = require_login()
 
 # ── CHART THEME ────────────────────────────────────────────────────────────────
 CHART_LAYOUT = dict(
@@ -50,13 +56,13 @@ st.markdown(textwrap.dedent("""
 </div>
 """), unsafe_allow_html=True)
 
-sources = DataSourceDB.get_all_sources()
+sources = DataSourceDB.get_all_sources(user_id=current_user)
 if not sources:
     st.info("No data sources registered. Add sources in Module 04 and run scans in Module 05.")
     st.stop()
 
 # ── OVERVIEW TILES ─────────────────────────────────────────────────────────────
-latest_trends = DataSourceDB.get_all_latest_trends()
+latest_trends = DataSourceDB.get_all_latest_trends(user_id=current_user)
 trends_by_source = {t["source_id"]: t for t in latest_trends}
 
 st.markdown('<div class="caption-label" style="margin-bottom:10px">CROSS-SOURCE RISK OVERVIEW</div>', unsafe_allow_html=True)
